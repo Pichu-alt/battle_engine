@@ -235,32 +235,36 @@ struct ability_data abilities[] = {
 		// STICKYHOLD
 	},
 	{
-		// SHEDSKIN
+		// Shed Skin
 		.on_residual = shed_skin_on_residual,
 	},
 	{
-		// GUTS
+		// Guts
 		.on_stat = guts_on_stat,
 	},
 	{
-		// MARVELSCALE
+		// Marvel Scale
 		.on_stat = marvel_scale_on_stat,
 	},
 	{
-		// Liquidooze
+		// Liquid Ooze
 		.on_drain = liquid_ooze_on_drain,
 	},
 	{
-		// OVERGROW
+		// Overgrow
+		.on_stat = overgrow_on_stat,
 	},
 	{
-		// BLAZE
+		// Blaze
+		.on_stat = blaze_on_stat,
 	},
 	{
-		// TORRENT
+		// Torrent
+		.on_stat = torrent_on_stat,
 	},
 	{
-		// SWARM
+		// Swarm
+		.on_stat = swarm_on_stat,
 	},
 	{
 		// ROCKHEAD
@@ -292,14 +296,15 @@ struct ability_data abilities[] = {
 		// AIRLOCK
 	},
 	{
-		// TANGLEDFEET
+		// Tangled Feet
 		.on_stat = tangled_feet_on_stat,
 	},
 	{
 		// MOTORDRIVE
 	},
 	{
-		// RIVALRY
+		// Rivalry
+		.on_base_power = rivalry_on_base_power,
 	},
 	{
 		// STEADFAST
@@ -329,7 +334,7 @@ struct ability_data abilities[] = {
 		// DRYSKIN
 	},
 	{
-		// DOWNLOAD
+		// Download
 		.on_start = download_on_start,
 	},
 	{
@@ -345,7 +350,7 @@ struct ability_data abilities[] = {
 		.on_base_power = adaptability_on_base_power,
 	},
 	{
-		// SKILLLINK
+		// Skill Link
 		.on_modify_move = skill_link_on_modify_move,
 	},
 	{
@@ -355,7 +360,7 @@ struct ability_data abilities[] = {
 		// SOLARPOWER
 	},
 	{
-		// QUICKFEET
+		// Quick Feet
 		.on_stat = quick_feet_on_stat,
 	},
 	{
@@ -427,7 +432,7 @@ struct ability_data abilities[] = {
 		// ICEBODY
 	},
 	{
-		// Soild Rock
+		// Solid Rock
 		.on_damage = filter_variations_on_damage,
 	},
 	{
@@ -473,7 +478,8 @@ struct ability_data abilities[] = {
 		.after_stat_boost_mod = defiant_after_stat_boost_mod,
 	},
 	{
-		// DEFEATIST
+		// Defeatist
+		.on_stat = defeatist_on_stat,
 	},
 	{
 		// Cursed Body
@@ -579,7 +585,8 @@ struct ability_data abilities[] = {
 		.before_turn = prankster_before_turn,
 	},
 	{
-		// SANDFORCE
+		// Sand Force
+		.on_base_power = sand_force_on_base_power,
 	},
 	{
 		// Iron Barbs
@@ -650,7 +657,8 @@ struct ability_data abilities[] = {
 		.on_base_power = megalauncher_on_base_power,
 	},
 	{
-		// GRASSPELT
+		// Grass Pelt
+		.on_stat = grass_pelt_on_stat,
 	},
 	{
 		// SYMBIOSIS

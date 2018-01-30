@@ -92,7 +92,7 @@ u8 limber_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* ac
 // Static
 u8 static_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
 	if (rand_range(1, 100) <= 30) {
 	    set_status(user, EFFECT_PARALYZE, src);
@@ -196,7 +196,7 @@ u8 own_tempo_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback*
 // Rough Skin and Iron Barbs
 u8 rough_skin_variations_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
 	do_damage(user, TOTAL_HP(user) >> 3);
 	return true;
@@ -286,7 +286,7 @@ u16 huge_power_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* 
 // Poison Point
 u8 poisonpoint_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
         if (rand_range(0, 100) <= 30)
 	    set_status(user, EFFECT_POISON, src);
@@ -334,7 +334,7 @@ void sandstream_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* a
 
 // PRESSURE
 
-// THICKFAT
+// Thick Fat
 u16 thick_fat_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 {
     if ((TARGET_OF(user) != src) || (CURRENT_ACTION->action_bank != user)) return acb->data_ptr;
@@ -374,7 +374,7 @@ u8 early_bird_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* 
 // Flame Body
 u8 flamebody_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
         if (rand_range(0, 100) <= 30)
 	    set_status(user, EFFECT_BURN, src);
@@ -442,7 +442,7 @@ u16 hustle_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 // Cute Charm
 u8 cute_charm_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
         if (B_GENDER(user) == B_GENDER(src)) return true;
         if (rand_range(0, 100) <= 30)
@@ -525,16 +525,55 @@ void liquid_ooze_on_drain(u8 user, u8 src, u16 move, struct anonymous_callback* 
         B_DRAIN(user) = -B_DRAIN(user);
 }
 
+// Overgrow
+u16 overgrow_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
 
-// OVERGROW
+    if (B_MOVE_HAS_TYPE(user, TYPE_GRASS) && B_CURRENT_HP(user) <= (TOTAL_HP(user) / 3)) {
+        if ((stat_id == ATTACK_MOD) || (stat_id == SPATTACK_MOD))
+            return PERCENT(acb->data_ptr, 150);
+    }
+    return acb->data_ptr;
+}
 
-// BLAZE
+// Blaze
+u16 blaze_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
 
-// TORRENT
+    if (B_MOVE_HAS_TYPE(user, TYPE_FIRE) && B_CURRENT_HP(user) <= (TOTAL_HP(user) / 3)) {
+        if ((stat_id == ATTACK_MOD) || (stat_id == SPATTACK_MOD))
+            return PERCENT(acb->data_ptr, 150);
+    }
+    return acb->data_ptr;
+}
 
-// SWARM
+// Torrent
+u16 torrent_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
 
-// ROCKHEAD
+    if (B_MOVE_HAS_TYPE(user, TYPE_WATER) && B_CURRENT_HP(user) <= (TOTAL_HP(user) / 3)) {
+        if ((stat_id == ATTACK_MOD) || (stat_id == SPATTACK_MOD))
+            return PERCENT(acb->data_ptr, 150);
+    }
+    return acb->data_ptr;
+}
+
+// Swarm
+u16 swarm_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+
+    if (B_MOVE_HAS_TYPE(user, TYPE_BUG) && B_CURRENT_HP(user) <= (TOTAL_HP(user) / 3)) {
+        if ((stat_id == ATTACK_MOD) || (stat_id == SPATTACK_MOD))
+            return PERCENT(acb->data_ptr, 150);
+    }
+    return acb->data_ptr;
+}
+
+// Rock Head
 
 // Drought
 void drought_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -568,7 +607,7 @@ bool white_smoke_on_stat_boost(u8 user, u8 src, u16 move, struct anonymous_callb
 
 // AIRLOCK
 
-// TANGLEDFEET
+// Tangled Feet
 u16 tangled_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 {
     if (user != src) return acb->data_ptr;
@@ -580,9 +619,19 @@ u16 tangled_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback
 }
 
 
+
 // MOTORDRIVE
 
-// RIVALRY
+// Rivalry
+void rivalry_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (TARGET_OF(user) != src) return;
+    if (B_GENDER(user) == 0xFF || B_GENDER(src) == 0xFF) return;
+    if (B_GENDER(user) == B_GENDER(src))
+        B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), 125);
+    else
+        B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), 75);
+}
 
 // STEADFAST
 
@@ -593,7 +642,7 @@ u16 tangled_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback
 // Anger Point
 u8 angerpoint_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (B_MOVE_WILL_CRIT(user))
         B_ATTACK_BUFF(src) = 6;
         enqueue_message(NULL, src, STRING_ANGER_POINT, NULL);
@@ -623,7 +672,7 @@ bool simple_on_stat_boost_mod(u8 user, u8 src, u16 stat_id, struct anonymous_cal
 
 // DRYSKIN
 
-// DOWNLOAD
+// Download
 void download_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     u32 def_total = 0;
@@ -770,7 +819,7 @@ void technician_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callba
 
 // MOLDBREAKER
 
-// SUPERLUCK
+// Super Luck
 u16 super_luck_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 {
     // if pokemon getting stat accessed isnt the target of keeneye user or
@@ -790,7 +839,7 @@ u16 super_luck_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* 
 // Aftermath
 u8 aftermath_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
         if (B_CURRENT_HP(src) < 1)
 	    do_damage(user, TOTAL_HP(user) >> 2);
@@ -915,7 +964,17 @@ void defiant_after_stat_boost_mod(u8 user, u8 src, u16 stat_id, struct anonymous
         stat_boost(user, STAT_ATTACK - 1, 2, user);
 }
 
-// DEFEATIST
+// Defeatist
+u16 defeatist_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+
+    if (B_CURRENT_HP(user) <= (TOTAL_HP(user) >> 1)) {
+        if ((stat_id == ATTACK_MOD) || (stat_id == SPATTACK_MOD))
+            return acb->data_ptr >> 1;
+    }
+    return acb->data_ptr;
+}
 
 // Cursed Body
 u8 cursed_body_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -950,7 +1009,7 @@ void friend_guard_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback
 // Weak Armor
 u8 weak_armor_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (B_MOVE_IS_PHYSICAL(user)) {
         stat_boost(src, DEFENSE_MOD, -1, user);
         stat_boost(src, SPEED_MOD, 2, user);
@@ -1071,7 +1130,7 @@ u16 mummy_immune_abilities[] = {
 
 u8 mummy_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (!B_MOVE_CONTACT(user)) return true;
     for (u8 i = 0; i < (sizeof(mummy_immune_abilities) / sizeof(u16)); i++) {
          if (mummy_immune_abilities[i] == BANK_ABILITY(user)) return true;
@@ -1106,7 +1165,7 @@ void moxie_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 // Justified
 u8 justified_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (B_MOVE_HAS_TYPE(user, MTYPE_DARK))
         stat_boost(src, ATTACK_MOD, 1, user);
     return true;
@@ -1115,7 +1174,7 @@ u8 justified_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb
 // Rattled
 u8 rattled_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (B_MOVE_HAS_TYPE(user, MTYPE_DARK) || B_MOVE_HAS_TYPE(user, MTYPE_GHOST) || B_MOVE_HAS_TYPE(user, MTYPE_BUG))
         stat_boost(src, ATTACK_MOD, 1, src);
     return true;
@@ -1143,7 +1202,14 @@ void prankster_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback*
     }
 }
 
-// SANDFORCE
+// Sand Force
+/* TO-DO: Sandstorm Immunity */
+void sand_force_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return;
+    if (battle_master->field_state.is_sandstorm && (B_MOVE_HAS_TYPE(user, TYPE_ROCK) || B_MOVE_HAS_TYPE(user, TYPE_GROUND) || B_MOVE_HAS_TYPE(user, TYPE_STEEL)))
+        B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), 130);
+}
 
 // ZENMODE
 
@@ -1278,7 +1344,15 @@ void megalauncher_on_base_power(u8 user, u8 src, u16 move, struct anonymous_call
     }
 }
 
-// GRASSPELT
+// Grass Pelt
+u16 grass_pelt_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (battle_master->field_state.is_grassy_terrain && stat_id == DEFENSE_MOD) {
+        return PERCENT(acb->data_ptr, 150);
+    }
+    return acb->data_ptr;
+}
 
 // SYMBIOSIS
 
@@ -1321,7 +1395,7 @@ void pixilate_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* 
 // Gooey and Tangling Hair
 u8 gooey_variations_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (!B_MOVE_CONTACT(user)) return true;
     stat_boost(user, SPEED_MOD, -1, user);
     return true;
@@ -1371,7 +1445,7 @@ void aerilate_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* 
 // Stamina
 u8 stamina_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (B_MOVE_DMG(user) > 0)
         stat_boost(src, DEFENSE_MOD, 1, user);
     return true;
@@ -1384,7 +1458,7 @@ u8 stamina_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 // Water Compaction
 u8 water_compaction_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (TARGET_OF(user) != src) return true;
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
     if (B_MOVE_HAS_TYPE(user, MTYPE_WATER))
         stat_boost(src, DEFENSE_MOD, 2, user);
     return true;
