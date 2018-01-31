@@ -85,12 +85,12 @@ u8 leech_seed_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* 
     return true;
 }
 
-u8 leech_seed_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus leech_seed_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
-    if (b_pkmn_has_type(TARGET_OF(user), MTYPE_GRASS)) return 2; // immune
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
+    if (b_pkmn_has_type(TARGET_OF(user), MTYPE_GRASS)) return TRYHIT_TARGET_MOVE_IMMUNITY; // immune
     u8 id = add_callback(CB_ON_RESIDUAL, 8, CB_PERMA, TARGET_OF(user), (u32)leech_seed_on_residual);
     CB_MASTER[id].data_ptr = user;
     enqueue_message(NULL, TARGET_OF(user), STRING_SEEDED, 0);
-    return true;
+    return TRYHIT_USE_MOVE_NORMAL;
 }

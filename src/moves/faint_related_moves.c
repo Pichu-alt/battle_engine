@@ -156,9 +156,9 @@ void final_gambit_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback
 
 /* Self Destruct, Explosion */
 // These moves fail with Damp on the field. Damp should handle this effect.
-u8 self_destruct_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus self_destruct_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     do_damage(user, B_CURRENT_HP(user));
-    return true;
+    return TRYHIT_USE_MOVE_NORMAL;
 }

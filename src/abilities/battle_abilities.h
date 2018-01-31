@@ -13,7 +13,7 @@ typedef u8 (*AbilityBeforeSwitchOutCallback)(u8 user, u8 source, u16 move, struc
 typedef u8 (*AbilityBeforeMoveCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 typedef u8 (*AbilityOnFailCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 typedef u8 (*AbilityOnModifyMoveCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
-typedef u8 (*AbilityOnTryhitCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
+typedef enum TryHitMoveStatus (*AbilityOnTryhitCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 typedef void (*AbilityOnBasePowerCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 typedef void (*AbilityOnDamageCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 typedef u8 (*AbilityOnEffectCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
@@ -100,7 +100,7 @@ extern u8 poison_touch_on_effect(u8 user, u8 src, u16 move, struct anonymous_cal
 extern u8 mummy_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 gooey_variations_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern void pick_pocket_on_secondary(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-extern u8 oblivious_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus oblivious_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 oblivious_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb);
 extern u8 own_tempo_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb);
 extern u8 poison_heal_on_effect(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb);
@@ -174,15 +174,15 @@ extern u16 plus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback*
 extern u16 minus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u8 comatose_on_status(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern void download_on_start(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
-extern u8 motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-extern u8 sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-extern u8 lightning_rod_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-extern u8 storm_drain_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
-extern u8 bulletproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
-extern u8 soundproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
-extern u8 overcoat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
-extern u8 dazzling_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
-extern u8 volt_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
-extern u8 water_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus lightning_rod_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus storm_drain_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus bulletproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus soundproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus overcoat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus dazzling_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus volt_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus water_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */

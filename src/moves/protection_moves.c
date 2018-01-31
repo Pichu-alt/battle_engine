@@ -28,9 +28,9 @@ bool is_protection_move(u16 move)
 
 /* Protect and Detect */
 // on tryhit try to see if protect will fail
-u8 protection_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus protection_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     u8 chance_land = 0;
     if (!is_protection_move(LAST_MOVE(user)))
         PROTECTION_TURNS(user) = 0;
@@ -39,11 +39,11 @@ u8 protection_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* ac
     }
     if (rand_range(0, 100) > chance_land) {
         PROTECTION_TURNS(user) = 0;
-        return false; // move failed to land
+        return TRYHIT_CANT_USE_MOVE; // move failed to land
     } else {
         // move landed
         PROTECTION_TURNS(user)++;
-        return true;
+        return TRYHIT_USE_MOVE_NORMAL;
     }
 }
 
@@ -123,13 +123,13 @@ u8 kings_shield_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_ca
 
 
 /* Mat block */
-u8 mat_block_on_tryhit(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus mat_block_on_tryhit(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
 {
-    if (user != source) return true;
+    if (user != source) return TRYHIT_USE_MOVE_NORMAL;
     u8 status = protection_on_tryhit(user, source, move, acb);
     if (status && p_bank[user]->b_data.first_turn)
-        return true;
-    return false;
+        return TRYHIT_USE_MOVE_NORMAL;
+    return TRYHIT_CANT_USE_MOVE;
 }
 
 u8 mat_block_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
@@ -209,10 +209,10 @@ u8 crafty_shield_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_c
     return true;
 }
 
-u8 crafty_shield_on_tryhit(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus crafty_shield_on_tryhit(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
 {
-    if (user != source) return true;
-    if (protection_effect_exists_side(source, (u32)crafty_shield_on_tryhit_anon)) return false;
+    if (user != source) return TRYHIT_USE_MOVE_NORMAL;
+    if (protection_effect_exists_side(source, (u32)crafty_shield_on_tryhit_anon)) return TRYHIT_CANT_USE_MOVE;
     return (!moves_last(source));
 }
 

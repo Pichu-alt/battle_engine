@@ -34,12 +34,12 @@ u8 natures_madness_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_ca
 	return true;
 }
 
-u8 endeavor_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus endeavor_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (user != src) return true;
+	if (user != src) return TRYHIT_USE_MOVE_NORMAL;
 	if (B_CURRENT_HP(user) >= B_CURRENT_HP(TARGET_OF(user)))
-		return 2; // immune
-	return true;
+		return TRYHIT_TARGET_MOVE_IMMUNITY; // immune
+	return TRYHIT_USE_MOVE_NORMAL;
 }
 
 void endeavor_on_dmg(u8 user, u8 src, u16 move, struct anonymous_callback* acb)

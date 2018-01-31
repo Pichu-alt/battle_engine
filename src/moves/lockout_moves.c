@@ -17,15 +17,15 @@ const static u16 encore_disallow[] = {
 };
 
 /* Encore */
-u8 encore_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus encore_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
-    if (move_pp_count(LAST_MOVE(TARGET_OF(user)), TARGET_OF(user)) < 1) return false;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
+    if (move_pp_count(LAST_MOVE(TARGET_OF(user)), TARGET_OF(user)) < 1) return TRYHIT_CANT_USE_MOVE;
     for (u8 i = 0; i < (sizeof(encore_disallow) / sizeof(u16)); i++) {
         if (LAST_MOVE(TARGET_OF(user)) == encore_disallow[i])
-            return false;
+            return TRYHIT_CANT_USE_MOVE;
     }
-    return true;
+    return TRYHIT_USE_MOVE_NORMAL;
 }
 
 u8 encore_on_disable(u8 user, u8 src, u16 move, struct anonymous_callback* acb)

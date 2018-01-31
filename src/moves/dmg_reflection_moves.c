@@ -14,12 +14,12 @@ void counter_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb
         B_MOVE_DMG(src) = B_MOVE_DMG(user) << 1;
 }
 
-u8 counter_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus counter_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if (B_MOVE_DMG(src) < 1)
-        return false;
-    return true;
+        return TRYHIT_CANT_USE_MOVE;
+    return TRYHIT_USE_MOVE_NORMAL;
 }
 
 void counter_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -36,12 +36,12 @@ void mirror_coat_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback*
         B_MOVE_DMG(src) = B_MOVE_DMG(user) << 1;
 }
 
-u8 mirror_coat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus mirror_coat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if (B_MOVE_DMG(src) < 1)
-        return false;
-    return true;
+        return TRYHIT_CANT_USE_MOVE;
+    return TRYHIT_USE_MOVE_NORMAL;
 }
 
 void mirror_coat_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -59,12 +59,12 @@ void metal_burst_damage(u8 user, u8 src, u16 move, struct anonymous_callback* ac
 
 }
 
-u8 metal_burst_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus metal_burst_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if (B_MOVE_DMG(src) < 1)
-        return false;
-    return true;
+        return TRYHIT_CANT_USE_MOVE;
+    return TRYHIT_USE_MOVE_NORMAL;
 }
 
 void metal_burst_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* acb)

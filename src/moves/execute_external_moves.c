@@ -250,12 +250,12 @@ u16 magic_coat_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_callba
 	return 3; // fail silently
 }
 
-u8 magic_coat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus magic_coat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (user != src) return true;
+	if (user != src) return TRYHIT_USE_MOVE_NORMAL;
 	enqueue_message(CURRENT_MOVE(user), user, STRING_SHROUDED_MAGICCOAT, 0);
 	add_callback(CB_ON_TRYHIT_MOVE, 2, 0, user, (u32)(magic_coat_tryhit_anon));
-	return true;
+	return TRYHIT_USE_MOVE_NORMAL;
 }
 
 
@@ -276,19 +276,19 @@ u8 me_first_on_base_power_anon(u8 attacker, u8 src, u16 move, struct anonymous_c
 	return true;
 }
 
-u8 me_first_on_tryhit(u8 user, u8 src, u16 move_user, struct anonymous_callback* acb)
+enum TryHitMoveStatus me_first_on_tryhit(u8 user, u8 src, u16 move_user, struct anonymous_callback* acb)
 {
-	if (user != src) return true;
+	if (user != src) return TRYHIT_USE_MOVE_NORMAL;
 	// fail if user hasn't moved before target
 	if (user != 0)
-		return false;
+		return TRYHIT_CANT_USE_MOVE;
 	u8 defender = TARGET_OF(user);
 	u16 move = CURRENT_MOVE(defender);
 	if (IS_MOVE_STATUS(move))
-		return false;
+		return TRYHIT_CANT_USE_MOVE;
 	for (u8 i = 0; i < (sizeof(me_first_disallow) / sizeof(u16)); i++) {
 		if (me_first_disallow[i] == move)
-			return false;
+			return TRYHIT_CANT_USE_MOVE;
 	}
 
 	// move is valid to be copied
@@ -298,7 +298,7 @@ u8 me_first_on_tryhit(u8 user, u8 src, u16 move_user, struct anonymous_callback*
 	enqueue_message(CURRENT_MOVE(user), user, STRING_ATTACK_USED, 0);
 	add_callback(CB_ON_BASE_POWER_MOVE, 4, 0, user, (u32)me_first_on_base_power_anon);
 	acb->in_use = false;
-	return true;
+	return TRYHIT_USE_MOVE_NORMAL;
 }
 
 /* Snatch */
@@ -364,18 +364,18 @@ void instruct_on_after_move(u8 user, u8 src, u16 move, struct anonymous_callback
 	CURRENT_MOVE(target) = LAST_MOVE(target);
 }
 
-u8 instruct_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus instruct_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (user != src) return true;
+	if (user != src) return TRYHIT_USE_MOVE_NORMAL;
 	u8 last_atk = LAST_MOVE(TARGET_OF(user));
 
-	if (last_atk == MOVE_NONE) return false;
-	if (IS_RECHARGE(last_atk) || IS_CHARGE(last_atk)) return false;
+	if (last_atk == MOVE_NONE) return TRYHIT_CANT_USE_MOVE;
+	if (IS_RECHARGE(last_atk) || IS_CHARGE(last_atk)) return TRYHIT_CANT_USE_MOVE;
 	for (u8 i = 0 ; i < (sizeof(instruct_disallow) / sizeof(u16)); i++) {
 		if (last_atk == instruct_disallow[i])
-			return false;
+			return TRYHIT_CANT_USE_MOVE;
 	}
-	return true;
+	return TRYHIT_USE_MOVE_NORMAL;
 }
 
 
@@ -400,15 +400,15 @@ u8 after_you_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 
 
 // Quash
-u8 quash_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus quash_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-	if (user != src) return true;
+	if (user != src) return TRYHIT_USE_MOVE_NORMAL;
 	// fail if target has moved already
-	if (!p_bank[TARGET_OF(user)]->b_data.will_move) return false;
+	if (!p_bank[TARGET_OF(user)]->b_data.will_move) return TRYHIT_CANT_USE_MOVE;
 
 	// find and terminate target's turn
 	struct action* a = find_action(TARGET_OF(user), ActionMove);
-	if (a == NULL) return false;
+	if (a == NULL) return TRYHIT_CANT_USE_MOVE;
 	u8 target_backup = a->target;
 	u16 move_backup = a->move;
 	u8 event_state_backup = a->event_state;
@@ -423,5 +423,5 @@ u8 quash_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 	a->move = move_backup;
 	a->target = target_backup;
 	a->event_state = event_state_backup;
-	return true;
+	return TRYHIT_USE_MOVE_NORMAL;
 }

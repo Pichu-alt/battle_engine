@@ -27,17 +27,17 @@ u16 future_sight_on_residual(u8 user, u8 src, u16 move, struct anonymous_callbac
     return true;
 }
 
-u8 future_sight_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus future_sight_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
-    if (callback_exists((u32)future_sight_on_residual)) return false;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
+    if (callback_exists((u32)future_sight_on_residual)) return TRYHIT_CANT_USE_MOVE;
     extern u16 doom_desire_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-    if (callback_exists((u32)doom_desire_on_residual)) return false;
+    if (callback_exists((u32)doom_desire_on_residual)) return TRYHIT_CANT_USE_MOVE;
     u8 id = add_callback(CB_ON_RESIDUAL, 0, 0, user, (u32)future_sight_on_residual);
     CB_MASTER[id].data_ptr = TARGET_OF(src);
     CB_MASTER[id].delay_before_effect = 3;
     enqueue_message(MOVE_FUTURE_SIGHT, user, STRING_FUTURE_FORESAW, 0);
-    return 3;
+    return TRYHIT_FAIL_SILENTLY;
 }
 
 // Wish
@@ -75,12 +75,12 @@ u16 yawn_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     return true;
 }
 
-u8 yawn_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus yawn_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user!= src) return true;
+    if (user!= src) return TRYHIT_USE_MOVE_NORMAL;
     if (B_STATUS(user) || (is_grounded(user) && battle_master->field_state.is_electric_terrain))
-        return false;
-    return true;
+        return TRYHIT_CANT_USE_MOVE;
+    return TRYHIT_USE_MOVE_NORMAL;
 }
 
 u8 yawn_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -127,15 +127,15 @@ u16 doom_desire_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback
     return true;
 }
 
-u8 doom_desire_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus doom_desire_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
-    if (callback_exists((u32)future_sight_on_residual)) return false;
-    if (callback_exists((u32)doom_desire_on_residual)) return false;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
+    if (callback_exists((u32)future_sight_on_residual)) return TRYHIT_CANT_USE_MOVE;
+    if (callback_exists((u32)doom_desire_on_residual)) return TRYHIT_CANT_USE_MOVE;
     u8 id = add_callback(CB_ON_RESIDUAL, 0, 0, user, (u32)doom_desire_on_residual);
     CB_MASTER[id].data_ptr = TARGET_OF(src);
     CB_MASTER[id].delay_before_effect = 3;
 
     enqueue_message(MOVE_DOOM_DESIRE, user, STRING_DOOM_DESIRE, 0);
-    return 3;
+    return TRYHIT_FAIL_SILENTLY;
 }

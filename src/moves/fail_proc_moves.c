@@ -37,9 +37,9 @@ u8 flower_shield_before_move(u8 user, u8 src, u16 move, struct anonymous_callbac
     return false;
 }
 
-u8 flower_shield_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus flower_shield_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     // non grass types fail silently
     return (b_pkmn_has_type(TARGET_OF(user), MTYPE_GRASS)) ? 1 : 3;
 }
@@ -50,26 +50,26 @@ u8 cotton_spore_on_tryhit_move(u8 user, u8 src, u16 move, struct anonymous_callb
     return (!(b_pkmn_has_type(TARGET_OF(src), MTYPE_GRASS)));
 }
 
-u8 synchonoise_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus synchonoise_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     for (u8 i = 0; i < sizeof(p_bank[user]->b_data.type); i++) {
         if (p_bank[user]->b_data.type[i] == MTYPE_EGG)
             continue;
         if (b_pkmn_has_type(TARGET_OF(user), p_bank[user]->b_data.type[i])) {
             dprintf("type is shared\n");
-            return true;
+            return TRYHIT_USE_MOVE_NORMAL;
         }
     }
-    return false;
+    return TRYHIT_CANT_USE_MOVE;
 }
 
 
-u8 focus_energy_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus focus_energy_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if (HAS_VOLATILE(user, VOLATILE_FOCUS_ENERGY))
-        return false;
+        return TRYHIT_CANT_USE_MOVE;
     ADD_VOLATILE(user, VOLATILE_FOCUS_ENERGY);
-    return true;
+    return TRYHIT_USE_MOVE_NORMAL;
 }

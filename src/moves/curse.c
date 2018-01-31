@@ -25,9 +25,9 @@ u8 curse_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     return true;
 }
 
-u8 curse_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus curse_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if (b_pkmn_has_type(user, MTYPE_GHOST)) {
         add_callback(CB_ON_RESIDUAL, 0, CB_PERMA, TARGET_OF(user), (u32)curse_on_residual);
         add_callback(CB_ON_EFFECT, 0, 0, user, (u32)curse_on_effect_ghost);
@@ -40,5 +40,5 @@ u8 curse_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
         B_USER_STAT_MOD_AMOUNT(user, DEFENSE_MOD) = 1;
         B_USER_STAT_MOD_AMOUNT(user, SPEED_MOD) = -1;
     }
-    return true;
+    return TRYHIT_USE_MOVE_NORMAL;
 }

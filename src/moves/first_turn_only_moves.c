@@ -7,12 +7,12 @@ extern void dprintf(const char * str, ...);
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
 
 /* Fakeout + First impression */
-u8 fakeout_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus fakeout_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if (p_bank[user]->b_data.first_turn) {
-        return true;
+        return TRYHIT_USE_MOVE_NORMAL;
     } else {
-        return false;
+        return TRYHIT_CANT_USE_MOVE;
     }
 }
