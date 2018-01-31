@@ -85,7 +85,8 @@ struct ability_data abilities[] = {
 		.on_status = immunity_on_status,
 	},
 	{
-		// FLASHFIRE
+		// Flash Fire
+		.on_tryhit = flash_fire_on_tryhit,
 	},
 	{
 		// SHIELDDUST

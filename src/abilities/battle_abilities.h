@@ -184,5 +184,6 @@ extern enum TryHitMoveStatus overcoat_on_tryhit(u8 user, u8 src, u16 move, struc
 extern enum TryHitMoveStatus dazzling_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
 extern enum TryHitMoveStatus volt_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
 extern enum TryHitMoveStatus water_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern enum TryHitMoveStatus flash_fire_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */

@@ -19,6 +19,7 @@ extern void set_status(u8 bank, enum Effect status, u8 inflictor);
 extern void do_damage(u8 bank_index, u16 dmg);
 extern void flat_heal(u8 bank, u16 heal);
 extern bool b_pkmn_has_type(u8 bank, enum PokemonType type);
+extern void do_heal(u8 bank_index, u8 percent_heal);
 
 /* Note: Illuminate and Honey Gather have no In-Battle effect so they are not present here*/
 
@@ -195,7 +196,29 @@ u8 immunity_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* 
     return true;
 }
 
-// FLASHFIRE
+// Flash Fire
+u16 flash_fire_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (B_MOVE_HAS_TYPE(user, TYPE_FIRE)) {
+        if ((stat_id == ATTACK_MOD) || (stat_id == SPATTACK_MOD))
+            return PERCENT(acb->data_ptr, 150);
+    }
+    return acb->data_ptr;
+}
+
+enum TryHitMoveStatus flash_fire_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return TRYHIT_USE_MOVE_NORMAL;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_FIRE)) return TRYHIT_USE_MOVE_NORMAL;
+    if (!HAS_VOLATILE(VOLATILE_FLASH_FIRE, src)) {
+        ADD_VOLATILE(VOLATILE_FLASH_FIRE, src);
+        enqueue_message(NULL, src, STRING_FLASH_FIRE, NULL);
+        add_callback(CB_ON_STAT_MOD, 0, 0xFF, src, (u32)flash_fire_on_stat);
+        return TRYHIT_FAIL_SILENTLY;
+    }
+    return TRYHIT_TARGET_MOVE_IMMUNITY;
+}
 
 // SHIELDDUST
 
