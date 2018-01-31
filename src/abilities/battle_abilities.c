@@ -64,7 +64,7 @@ u8 battle_armor_variations_on_modify_move(u8 user, u8 src, u16 move, struct anon
     return true;
 }
 
-// STURDY
+// Sturdy
 void sturdy_on_dmg(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (TARGET_OF(user) != src) return;
@@ -100,9 +100,31 @@ u8 static_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 	return true;
 }
 
-// VOLTABSORB
+// Volt Absorb
+u8 volt_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_ELECTRIC)) return true;
+    if (TOTAL_HP(src) != B_CURRENT_HP(src)) {
+        do_heal(src, (TOTAL_HP(src) >> 2));
+        enqueue_message(NULL, src, STRING_HEAL, 0);
+        return 3;
+    }
+    return 2;
+}
 
-// WATERABSORB
+// Water Absorb
+u8 water_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_WATER)) return true;
+    if (TOTAL_HP(src) != B_CURRENT_HP(src)) {
+        do_heal(src, (TOTAL_HP(src) >> 2));
+        enqueue_message(NULL, src, STRING_HEAL, 0);
+        return 3;
+    }
+    return 2;
+}
 
 // Oblivious
 u16 oblivious_disallow[] = {
@@ -245,7 +267,14 @@ bool clear_body_variations_on_stat_boost(u8 user, u8 src, u16 move, struct anony
 
 // NATURALCURE
 
-// LIGHTNINGROD
+// Lightning Rod
+u8 lightning_rod_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_ELECTRIC)) return true;
+    stat_boost(src, STAT_SPECIAL_ATTACK, 1, src);
+    return 3;
+}
 
 // Serene Grace
 u8 serenegrace_on_modify_move_opp(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -319,7 +348,12 @@ u8 waterveil_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback*
 
 // MAGNETPULL
 
-// SOUNDPROOF
+// Soundproof
+u8 soundproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src) || !(IS_SOUND_BASE(move))) return true;
+    return 2;
+}
 
 // RAINDISH
 
@@ -618,9 +652,14 @@ u16 tangled_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback
     return acb->data_ptr;
 }
 
-
-
-// MOTORDRIVE
+// Motor Drive
+u8 motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_ELECTRIC)) return true;
+    stat_boost(src, STAT_SPEED, 1, src);
+    return 3;
+}
 
 // Rivalry
 void rivalry_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -643,9 +682,10 @@ void rivalry_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback*
 u8 angerpoint_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if ((TARGET_OF(user) != src) || (user == src)) return true;
-    if (B_MOVE_WILL_CRIT(user))
+    if (B_MOVE_WILL_CRIT(user)) {
         B_ATTACK_BUFF(src) = 6;
         enqueue_message(NULL, src, STRING_ANGER_POINT, NULL);
+    }
     return true;
 }
 
@@ -900,7 +940,14 @@ u16 scrappy_on_effectiveness(u8 target_type, u8 src, u16 move_type, struct anony
     return true;
 }
 
-// STORMDRAIN
+// Storm Drain
+u8 storm_drain_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_WATER)) return true;
+    stat_boost(src, STAT_SPECIAL_ATTACK, 1, src);
+    return 3;
+}
 
 // ICEBODY
 
@@ -1075,7 +1122,13 @@ u8 moody_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb) 
     return true;
 }
 
-// OVERCOAT
+// Overcoat
+/* TO-DO: Implement weather immunity */
+u8 overcoat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src) || !(IS_POWDER(move))) return true;
+    return 2;
+}
 
 // Poison Touch
 u8 poison_touch_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -1182,7 +1235,14 @@ u8 rattled_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 
 // MAGICBOUNCE
 
-// SAPSIPPER
+// Sap Sipper
+u8 sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return true;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_GRASS)) return true;
+    stat_boost(src, STAT_DEFENSE, 1, src);
+    return 3;
+}
 
 // Prankster
 u8 prankster_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -1267,7 +1327,12 @@ u16 fur_coat_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* ac
 
 // MAGICIAN
 
-// BULLETPROOF
+// Bulletproof
+u8 bulletproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src) || !(IS_BULLET(move))) return true;
+    return 2;
+}
 
 // Competitive
 void competitive_after_stat_boost_mod(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
@@ -1617,7 +1682,7 @@ void battery_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback*
     }
 }
 
-// FLUFFY
+// Fluffy
 void fluffy_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if ((TARGET_OF(user) != src) || (B_MOVE_DMG(user) < 1)) return;
@@ -1629,7 +1694,12 @@ void fluffy_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     // atleast 1 dmg
     B_MOVE_DMG(user) = MAX(1, B_MOVE_DMG(user));
 }
-// DAZZLING
+// Dazzling and Queenly Majesty
+u8 dazzling_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src) || (MOVE_PRIORITY(user) < 1)) return true;
+    return 2;
+}
 
 // Soul Heart
 void soul_heart_on_faint(u8 user, u8 src, u16 move, struct anonymous_callback* acb) {

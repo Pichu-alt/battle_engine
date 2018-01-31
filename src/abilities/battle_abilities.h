@@ -174,5 +174,15 @@ extern u16 plus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback*
 extern u16 minus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u8 comatose_on_status(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern void download_on_start(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u8 motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 lightning_rod_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 storm_drain_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern u8 bulletproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern u8 soundproof_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern u8 overcoat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern u8 dazzling_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern u8 volt_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
+extern u8 water_absorb_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback *acb);
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */

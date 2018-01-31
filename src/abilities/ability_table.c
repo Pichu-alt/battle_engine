@@ -35,7 +35,7 @@ struct ability_data abilities[] = {
 		.on_modify_move = battle_armor_variations_on_modify_move,
 	},
 	{
-		// STURDY
+		// Sturdy
 		.on_damage = sturdy_on_dmg,
 	},
 	{
@@ -53,10 +53,12 @@ struct ability_data abilities[] = {
 		.on_effect = static_on_effect,
 	},
 	{
-		// VOLTABSORB
+		// Volt Absorb
+		.on_tryhit = volt_absorb_on_tryhit,
 	},
 	{
-		// WATERABSORB
+		// Water Absorb
+		.on_tryhit = water_absorb_on_tryhit,
 	},
 	{
 		// Oblivious
@@ -127,10 +129,11 @@ struct ability_data abilities[] = {
 		// NATURALCURE
 	},
 	{
-		// LIGHTNINGROD
+		// Lightning Rod
+		.on_tryhit = lightning_rod_on_tryhit,
 	},
 	{
-		// SERENEGRACE
+		// Serene Grace
 		.on_modify_move = serenegrace_on_modify_move,
 	},
 	{
@@ -169,7 +172,8 @@ struct ability_data abilities[] = {
 		// MAGNETPULL
 	},
 	{
-		// SOUNDPROOF
+		// Soundproof
+		.on_tryhit = soundproof_on_tryhit,
 	},
 	{
 		// RAINDISH
@@ -300,7 +304,8 @@ struct ability_data abilities[] = {
 		.on_stat = tangled_feet_on_stat,
 	},
 	{
-		// MOTORDRIVE
+		// Motor Drive
+		.on_tryhit = motor_drive_on_tryhit,
 	},
 	{
 		// Rivalry
@@ -426,7 +431,8 @@ struct ability_data abilities[] = {
 		.on_effectiveness = scrappy_on_effectiveness,
 	},
 	{
-		// STORMDRAIN
+		// Storm Drain
+		.on_tryhit = storm_drain_on_tryhit,
 	},
 	{
 		// ICEBODY
@@ -525,7 +531,8 @@ struct ability_data abilities[] = {
 		.on_residual = moody_on_residual,
 	},
 	{
-		// OVERCOAT
+		// Overcoat
+		.on_tryhit = overcoat_on_tryhit,
 	},
 	{
 		// Poison Touch
@@ -578,7 +585,8 @@ struct ability_data abilities[] = {
 		// MAGICBOUNCE
 	},
 	{
-		// SAPSIPPER
+		// Sap Sipper
+		.on_tryhit =sap_sipper_on_tryhit,
 	},
 	{
 		// Prankster
@@ -627,7 +635,8 @@ struct ability_data abilities[] = {
 		// MAGICIAN
 	},
 	{
-		// BULLETPROOF
+		// Bullet Proof
+		.on_tryhit = bulletproof_on_tryhit,
 	},
 	{
 		// Competitive
@@ -778,7 +787,8 @@ struct ability_data abilities[] = {
 		.on_status = comatose_on_status,
 	},
 	{
-		// QUEENLYMAJESTY
+		// Queenly Majesty
+		.on_tryhit = dazzling_on_tryhit,
 	},
 	{
 		// INNARDSOUT
@@ -787,15 +797,16 @@ struct ability_data abilities[] = {
 		// DANCER
 	},
 	{
-		// BATTERY
+		// Battery
 		.on_base_power = battery_on_base_power,
 	},
 	{
-		// FLUFFY
+		// Fluffy
 		.on_damage = fluffy_on_damage,
 	},
 	{
-		// DAZZLING
+		// Dazzling
+		.on_tryhit = dazzling_on_tryhit,
 	},
 	{
 		// Soul Heart

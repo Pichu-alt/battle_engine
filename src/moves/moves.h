@@ -109,6 +109,7 @@ struct move_procs {
 #define IS_DEFROST(move) ((moves[move].m_flags) & FLAG_DEFROST)
 #define IS_GRAVITY(move) ((moves[move].m_flags) & FLAG_GRAVITY)
 #define IS_HEAL(move) ((moves[move].m_flags) & FLAG_HEAL)
+#define IS_POWDER(move) ((moves[move].m_flags) & FLAG_POWDER)
 #define IS_MIRRORABLE(move) ((moves[move].m_flags) & FLAG_MIRROR)
 #define IS_PROTECTABLE(move) ((moves[move].m_flags) & FLAG_PROTECT)
 #define IS_REFLECTABLE(move) ((moves[move].m_flags) & FLAG_REFLECTABLE)
