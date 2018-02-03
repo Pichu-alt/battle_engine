@@ -12,13 +12,6 @@ extern u16 rand_range(u16 min, u16 max);
 extern void set_attack_bm_inplace(u16 move_id, u8 bank);
 extern void reset_turn_bits(u8 bank);
 
-enum TryHitMoveStatus {
-    CANT_USE_MOVE = 0,
-    USE_MOVE_NORMAL,
-    TARGET_MOVE_IMMUNITY,
-    FAIL_SILENTLY,
-};
-
 enum TryHitMoveStatus move_tryhit(u8 attacker, u8 defender, u16 move)
 {
     for (u8 i = 0; i < BANK_MAX; i++) {
@@ -35,10 +28,10 @@ enum TryHitMoveStatus move_tryhit(u8 attacker, u8 defender, u16 move)
     battle_master->executing = true;
     while (battle_master->executing) {
         enum TryHitMoveStatus status = pop_callback(attacker, move);
-        if (status != USE_MOVE_NORMAL)
+        if (status != TRYHIT_USE_MOVE_NORMAL)
             return status;
     }
-    return USE_MOVE_NORMAL;
+    return TRYHIT_USE_MOVE_NORMAL;
 }
 
 
@@ -144,15 +137,15 @@ void event_move_tryhit_external(struct action* current_action)
 
     /* Move tryhit callbacks */
     switch (move_tryhit(bank_index, TARGET_OF(bank_index), move)) {
-        case CANT_USE_MOVE:
+        case TRYHIT_CANT_USE_MOVE:
             B_MOVE_FAILED(bank_index) = true;
             enqueue_message(move, bank_index, STRING_FAILED, move);
             break;
-        case TARGET_MOVE_IMMUNITY:
+        case TRYHIT_TARGET_MOVE_IMMUNITY:
             B_MOVE_FAILED(bank_index) = true;
             enqueue_message(0, bank_index, STRING_MOVE_IMMUNE, 0);
             break;
-        case FAIL_SILENTLY:
+        case TRYHIT_FAIL_SILENTLY:
             B_MOVE_FAILED(bank_index) = true;
             break;
         default:

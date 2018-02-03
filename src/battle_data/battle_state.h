@@ -49,6 +49,13 @@ enum TypeEffectiveness {
     TE_OHKO,
 };
 
+enum TryHitMoveStatus {
+    TRYHIT_CANT_USE_MOVE = 0,
+    TRYHIT_USE_MOVE_NORMAL,
+    TRYHIT_TARGET_MOVE_IMMUNITY,
+    TRYHIT_FAIL_SILENTLY,
+};
+
 struct battle_selection_cursor {
     u8 objid;
     u8 objid_mv_crsr[2];

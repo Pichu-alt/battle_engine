@@ -71,9 +71,9 @@ u8 camouflage_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* ac
 }
 
 // Nature power
-u8 nature_power_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus nature_power_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if (battle_master->field_state.is_electric_terrain) {
         CURRENT_MOVE(user) = MOVE_THUNDERBOLT;
     } else if (battle_master->field_state.is_grassy_terrain) {
@@ -88,5 +88,5 @@ u8 nature_power_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* 
     set_attack_bm_inplace(user, (user), MOVE_PRIORITY(CURRENT_MOVE(user)));
     LAST_MOVE(user) = MOVE_NATURE_POWER;
     enqueue_message(CURRENT_MOVE(user), user, STRING_ATTACK_USED, 0);
-    return true;
+    return TRYHIT_USE_MOVE_NORMAL;
 }

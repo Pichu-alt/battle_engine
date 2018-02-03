@@ -174,10 +174,10 @@ u8 forests_curse_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback*
 
 
 /* Electrify */
-u8 electrify_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus electrify_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
-    return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
+    return TRYHIT_USE_MOVE_NORMAL;
     return (p_bank[TARGET_OF(user)]->b_data.will_move);
 }
 
@@ -200,9 +200,9 @@ u8 electrify_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb
 
 
 /* Burn up */
-u8 burn_up_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus burn_up_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     return b_pkmn_has_type(user, MTYPE_FIRE);
 }
 

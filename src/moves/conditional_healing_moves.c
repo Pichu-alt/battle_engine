@@ -157,7 +157,6 @@ u8 heal_bell_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb
 
     // Heal party
     for (u8 i = 0; i < 6; i++) {
-        // don't heal sapsipper
         if (get_ability(&p[i]) == ABILITY_SOUNDPROOF)
             continue;
         // heal conditions

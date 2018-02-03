@@ -10,12 +10,12 @@ extern u16 rand_range(u16 min, u16 max);
 extern void do_damage(u8 bank_index, u16 dmg);
 
 
-u8 snore_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus snore_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     if ((B_STATUS(TARGET_OF(user)) == AILMENT_SLEEP) || (BANK_ABILITY(TARGET_OF(user)) == ABILITY_COMATOSE))
-        return true;
-    return false;
+        return TRYHIT_USE_MOVE_NORMAL;
+    return TRYHIT_CANT_USE_MOVE;
 }
 
 
@@ -61,17 +61,17 @@ u8 nightmare_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* a
     return true;
 }
 
-u8 nightmare_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+enum TryHitMoveStatus nightmare_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (user != src) return true;
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
     u8 status = B_STATUS(TARGET_OF(user));
 
     if ((status == AILMENT_SLEEP) || (BANK_ABILITY(TARGET_OF(user)) == ABILITY_COMATOSE)) {
         add_callback(CB_ON_RESIDUAL, 0, CB_PERMA, TARGET_OF(user), (u32)nightmare_on_residual);
         add_callback(CB_ON_STATUS, 0, CB_PERMA, TARGET_OF(user), (u32)nightmare_on_status);
         add_callback(CB_ON_MODIFY_MOVE, 0, CB_PERMA, TARGET_OF(user), (u32)nightmare_on_modify_move);
-        return true;
+        return TRYHIT_USE_MOVE_NORMAL;
     } else {
-        return false;
+        return TRYHIT_CANT_USE_MOVE;
     }
 }
