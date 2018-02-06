@@ -7,7 +7,6 @@
 #include "battle_events/battle_events.h"
 
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
-extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
 extern void dprintf(const char * str, ...);
 extern void give_exp(u8 fainted, u8 reciever);
 extern void jump_switch_menu(enum switch_reason reason);

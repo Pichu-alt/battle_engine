@@ -13,9 +13,9 @@ extern bool b_pkmn_pure_type(u8 bank, enum PokemonType type);
 /* Rain */
 u16 rain_dmg_mod(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if ((battle_master->field_state.is_raining) && (B_MOVE_HAS_TYPE(user, MTYPE_WATER))) {
+    if (IS_WEATHER_STANDARD_RAIN && (B_MOVE_HAS_TYPE(user, MTYPE_WATER))) {
         return 150;
-    } else if (B_MOVE_HAS_TYPE(user, MTYPE_FIRE)) {
+    } else if (IS_WEATHER_STANDARD_RAIN && B_MOVE_HAS_TYPE(user, MTYPE_FIRE)) {
         return 50;
     } else {
         return 100;
@@ -59,7 +59,7 @@ void clear_rain()
 u16 primordial_sea_dmg_mod(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     // fire type failing handled in tryhit
-    if ((battle_master->field_state.is_primordial_sea) && (B_MOVE_HAS_TYPE(user, MTYPE_WATER))) {
+    if (IS_WEATHER_HARSH_RAIN && (B_MOVE_HAS_TYPE(user, MTYPE_WATER))) {
         return 150;
     } else {
         return 100;
@@ -68,7 +68,7 @@ u16 primordial_sea_dmg_mod(u8 user, u8 src, u16 move, struct anonymous_callback*
 
 u8 primordial_sea_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (B_MOVE_HAS_TYPE(user, MTYPE_FIRE)) {
+    if (IS_WEATHER_HARSH_RAIN && B_MOVE_HAS_TYPE(user, MTYPE_FIRE)) {
         enqueue_message(0, 0, STRING_HEAVY_RAIN_FIZZLE, 0);
         return 3;
     }
@@ -105,9 +105,9 @@ void clear_primordial_sea()
 /* Sun */
 u16 sun_dmg_mod(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (B_MOVE_HAS_TYPE(user, MTYPE_FIRE)) {
+    if (IS_WEATHER_STANDARD_SUN && B_MOVE_HAS_TYPE(user, MTYPE_FIRE)) {
         return 150;
-    } else if (B_MOVE_HAS_TYPE(user, MTYPE_WATER)) {
+    } else if (IS_WEATHER_STANDARD_SUN && B_MOVE_HAS_TYPE(user, MTYPE_WATER)) {
         return 50;
     } else {
         return 100;
@@ -150,7 +150,7 @@ void clear_sun()
 u16 desolate_land_dmg_mod(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     // fire type failing handled in tryhit
-    if ((battle_master->field_state.is_desolate_land) && (B_MOVE_HAS_TYPE(user, MTYPE_FIRE))) {
+    if (IS_WEATHER_HARSH_SUN && (B_MOVE_HAS_TYPE(user, MTYPE_FIRE))) {
         return 150;
     } else {
         return 100;
@@ -159,7 +159,7 @@ u16 desolate_land_dmg_mod(u8 user, u8 src, u16 move, struct anonymous_callback* 
 
 u8 desolate_land_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
-    if (B_MOVE_HAS_TYPE(user, MTYPE_WATER)) {
+    if (IS_WEATHER_HARSH_SUN && B_MOVE_HAS_TYPE(user, MTYPE_WATER)) {
         enqueue_message(0, 0, STRING_HARSH_SUN_WATER, 0);
         return 3;
     }
@@ -189,7 +189,7 @@ void clear_desolate_land()
 u16 sandstorm_stat_mod(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 {
     if (stat_id != SPDEFENSE_MOD) return (u32)acb->data_ptr;
-    if (b_pkmn_has_type(user, MTYPE_ROCK)) {
+    if (IS_WEATHER_SANDSTORM && b_pkmn_has_type(user, MTYPE_ROCK)) {
         return PERCENT((u32)acb->data_ptr, 150);
     } else {
         return (u32)acb->data_ptr;
@@ -210,7 +210,7 @@ u16 sandstorm_on_residual_buffet(u8 user, u8 src, u16 move, struct anonymous_cal
     } else {
         if (acb->data_ptr)
             enqueue_message(NULL, NULL, STRING_SANDSTORM_RAGE, NULL);
-        if (b_pkmn_has_type(user, MTYPE_ROCK) || b_pkmn_has_type(user, MTYPE_STEEL) || b_pkmn_has_type(user, MTYPE_GROUND))
+        if (!IS_WEATHER_SANDSTORM || b_pkmn_has_type(user, MTYPE_ROCK) || b_pkmn_has_type(user, MTYPE_STEEL) || b_pkmn_has_type(user, MTYPE_GROUND))
             return true;
         if (HAS_VOLATILE(user, VOLATILE_DIVE) || HAS_VOLATILE(user, VOLATILE_DIG))
             return true;
@@ -246,11 +246,11 @@ u16 hail_on_residual_buffet(u8 user, u8 src, u16 move, struct anonymous_callback
     }
     if (acb->duration == 0) {
         if (acb->data_ptr)
-            enqueue_message(NULL, NULL, STRING_RAIN_FALLING, MOVE_HAIL);
+            enqueue_message(NULL, NULL, STRING_RAIN_STOPPED, MOVE_HAIL);
     } else {
         if (acb->data_ptr)
-            enqueue_message(NULL, NULL, STRING_RAIN_STOPPED, MOVE_HAIL);
-        if (b_pkmn_has_type(user, MTYPE_ICE))
+            enqueue_message(NULL, NULL, STRING_RAIN_FALLING, MOVE_HAIL);
+        if (!IS_WEATHER_HAIL || b_pkmn_has_type(user, MTYPE_ICE))
             return true;
         if (HAS_VOLATILE(user, VOLATILE_DIVE) || HAS_VOLATILE(user, VOLATILE_DIG))
             return true;
@@ -389,6 +389,7 @@ bool set_weather(enum WeatherTypes weather)
 
 enum WeatherTypes get_weather()
 {
+    if (battle_master->field_state.suppress_weather) return WEATHER_CLEAR;
     if (battle_master->field_state.is_raining) return WEATHER_RAIN;
     if (battle_master->field_state.is_sunny) return WEATHER_SUN;
     if (battle_master->field_state.is_sandstorm) return WEATHER_SANDSTORM;
@@ -396,6 +397,5 @@ enum WeatherTypes get_weather()
     if (battle_master->field_state.is_desolate_land) return WEATHER_HARSH_SUN;
     if (battle_master->field_state.is_primordial_sea) return WEATHER_HARSH_RAIN;
     if (battle_master->field_state.is_delta_stream) return WEATHER_MYSTERIOUS_AIR_CURRENT;
-    if (battle_master->field_state.suppress_weather) return WEATHER_CLEAR;
     return WEATHER_CLEAR;
 }

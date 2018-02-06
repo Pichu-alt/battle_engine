@@ -1290,7 +1290,7 @@ void prankster_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback*
 void sand_force_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (user != src) return;
-    if (battle_master->field_state.is_sandstorm && (B_MOVE_HAS_TYPE(user, TYPE_ROCK) || B_MOVE_HAS_TYPE(user, TYPE_GROUND) || B_MOVE_HAS_TYPE(user, TYPE_STEEL)))
+    if (IS_WEATHER_SANDSTORM && (B_MOVE_HAS_TYPE(user, TYPE_ROCK) || B_MOVE_HAS_TYPE(user, TYPE_GROUND) || B_MOVE_HAS_TYPE(user, TYPE_STEEL)))
         B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), 130);
 }
 

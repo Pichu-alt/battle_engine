@@ -207,4 +207,15 @@ extern void play_bmessage(void);
 extern void dprintf(const char* str, ...);
 extern bool peek_message(void);
 
+//weather macros
+#define IS_WEATHER_SUPPRESSED (battle_master->field_state.suppress_weather)
+#define IS_WEATHER_RAINING (!IS_WEATHER_SUPPRESSED && (battle_master->field_state.is_raining || battle_master->field_state.is_primordial_sea))
+#define IS_WEATHER_SUNNY (!IS_WEATHER_SUPPRESSED && (battle_master->field_state.is_sunny || battle_master->field_state.is_desolate_land))
+#define IS_WEATHER_HARSH_RAIN (!IS_WEATHER_SUPPRESSED && battle_master->field_state.is_primordial_sea)
+#define IS_WEATHER_HARSH_SUN (!IS_WEATHER_SUPPRESSED && battle_master->field_state.is_desolate_land)
+#define IS_WEATHER_STANDARD_RAIN (!IS_WEATHER_SUPPRESSED && battle_master->field_state.is_raining)
+#define IS_WEATHER_STANDARD_SUN (!IS_WEATHER_SUPPRESSED && battle_master->field_state.is_sunny)
+#define IS_WEATHER_HAIL (!IS_WEATHER_SUPPRESSED && battle_master->field_state.is_hail)
+#define IS_WEATHER_SANDSTORM (!IS_WEATHER_SUPPRESSED && battle_master->field_state.is_sandstorm)
+
 #endif /* BATTLE_STATE_H_ */
