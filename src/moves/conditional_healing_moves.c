@@ -64,7 +64,7 @@ u8 sparkling_aria_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback
 u8 shore_up_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (user != src) return true;
-    if (battle_master->field_state.is_sandstorm)
+    if (IS_WEATHER_SANDSTORM)
         B_HEAL(user) = 67;
     return true;
 }
