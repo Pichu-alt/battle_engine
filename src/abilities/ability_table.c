@@ -46,7 +46,8 @@ struct ability_data abilities[] = {
 		.on_status = limber_on_status,
 	},
 	{
-		// SANDVEIL
+		// Sand Veil
+		.a_flags.flag_data.sandstorm_damage_prevention = true,
 	},
 	{
 		// Static
@@ -316,7 +317,8 @@ struct ability_data abilities[] = {
 		// STEADFAST
 	},
 	{
-		// SNOWCLOAK
+		// Snow Cloak
+		.a_flags.flag_data.hail_damage_prevention = true,
 	},
 	{
 		// GLUTTONY
@@ -436,7 +438,9 @@ struct ability_data abilities[] = {
 		.on_tryhit = storm_drain_on_tryhit,
 	},
 	{
-		// ICEBODY
+		// Ice Body
+		.a_flags.flag_data.hail_damage_prevention = true,
+
 	},
 	{
 		// Solid Rock
@@ -534,6 +538,9 @@ struct ability_data abilities[] = {
 	{
 		// Overcoat
 		.on_tryhit = overcoat_on_tryhit,
+		.a_flags.flag_data.hail_damage_prevention = true,
+		.a_flags.flag_data.sandstorm_damage_prevention = true,
+		.a_flags.flag_data.powder_damage_prevention = true,
 	},
 	{
 		// Poison Touch
@@ -547,7 +554,8 @@ struct ability_data abilities[] = {
 		.on_stat_boost_mod = big_pecks_on_stat_boost,
 	},
 	{
-		// SANDRUSH
+		// Sand Rush
+		.a_flags.flag_data.sandstorm_damage_prevention = true,
 	},
 	{
 		// WONDERSKIN
@@ -596,6 +604,7 @@ struct ability_data abilities[] = {
 	{
 		// Sand Force
 		.on_base_power = sand_force_on_base_power,
+		.a_flags.flag_data.sandstorm_damage_prevention = true,
 	},
 	{
 		// Iron Barbs
@@ -725,7 +734,7 @@ struct ability_data abilities[] = {
 		.on_effect = water_compaction_on_effect,
 	},
 	{
-		// MERCILESS
+		// Mercliss
 		.on_modify_move = merciless_on_modify_move,
 	},
 	{
@@ -747,7 +756,8 @@ struct ability_data abilities[] = {
 		// BERSERK
 	},
 	{
-		// SLUSHRUSH
+		// Slush Rush
+		.a_flags.flag_data.hail_damage_prevention = true,
 	},
 	{
 		// LONGREACH

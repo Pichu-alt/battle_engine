@@ -17,6 +17,7 @@ extern bool disable_on_disable_move(u8 user, u8 src, u16 move, struct anonymous_
 extern u8 move_pp_count(u16 move_id, u8 bank);
 extern void set_status(u8 bank, enum Effect status, u8 inflictor);
 extern void do_damage(u8 bank_index, u16 dmg);
+extern bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags);
 extern void flat_heal(u8 bank, u16 heal);
 extern bool b_pkmn_has_type(u8 bank, enum PokemonType type);
 extern void do_heal(u8 bank_index, u8 percent_heal);
@@ -243,7 +244,7 @@ u8 rough_skin_variations_on_effect(u8 user, u8 src, u16 move, struct anonymous_c
 {
     if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
-	do_damage(user, TOTAL_HP(user) >> 3);
+	do_damage_residual(user, TOTAL_HP(user) >> 3, NULL);
 	return true;
 }
 
@@ -905,7 +906,7 @@ u8 aftermath_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb
     if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
         if (B_CURRENT_HP(src) < 1)
-	    do_damage(user, TOTAL_HP(user) >> 2);
+            do_damage_residual(user, TOTAL_HP(user) >> 2, NULL);
 	return true;
 }
 

@@ -4,9 +4,11 @@
 #include "../battle_data/battle_state.h"
 #include "../moves/moves.h"
 #include "../battle_text/battle_pick_message.h"
+#include "abilities/battle_abilities.h"
 
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
 extern void do_damage(u8 bank_index, u16 dmg);
+extern bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags);
 
 void event_move_recoil(struct action* current_action) {
     u8 bank = current_action->action_bank;
@@ -22,8 +24,9 @@ void event_move_recoil(struct action* current_action) {
         enqueue_message(move, bank, STRING_RECOIL, 0);
     } else if (B_MOVE_DMG(bank) != 0 && moves[move].recoil > 0) {
         // normal recoil based on move damage
-        do_damage(bank, PERCENT(B_MOVE_DMG(bank), moves[move].recoil));
-        enqueue_message(move, bank, STRING_RECOIL, 0);
+        if(do_damage_residual(bank, PERCENT(B_MOVE_DMG(bank), moves[move].recoil), FLAG_RECOIL_DMG_PREVENT)) {
+            enqueue_message(move, bank, STRING_RECOIL, 0);
+        }
     }
     CURRENT_ACTION->event_state++;
 }

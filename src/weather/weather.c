@@ -7,7 +7,7 @@ extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 ef
 extern void clear_other_weather(void);
 extern void dprintf(const char * str, ...);
 extern bool b_pkmn_has_type(u8 bank, enum PokemonType type);
-extern void do_damage(u8 bank_index, u16 dmg);
+extern bool do_damage_residual(u8 bank_index, u16 dmg);
 extern bool b_pkmn_pure_type(u8 bank, enum PokemonType type);
 
 /* Rain */
@@ -214,8 +214,8 @@ u16 sandstorm_on_residual_buffet(u8 user, u8 src, u16 move, struct anonymous_cal
             return true;
         if (HAS_VOLATILE(user, VOLATILE_DIVE) || HAS_VOLATILE(user, VOLATILE_DIG))
             return true;
-        enqueue_message(NULL, user, STRING_SANDSTORM_BUFFET, MOVE_SANDSTORM);
-        do_damage(user, (TOTAL_HP(user) / 16));
+        if (do_damage_residual(user, (TOTAL_HP(user) / 16)))
+            enqueue_message(NULL, user, STRING_SANDSTORM_BUFFET, MOVE_SANDSTORM);
     }
     return true;
 }
@@ -254,8 +254,9 @@ u16 hail_on_residual_buffet(u8 user, u8 src, u16 move, struct anonymous_callback
             return true;
         if (HAS_VOLATILE(user, VOLATILE_DIVE) || HAS_VOLATILE(user, VOLATILE_DIG))
             return true;
-        enqueue_message(NULL, user, STRING_SANDSTORM_BUFFET, MOVE_HAIL);
-        do_damage(user, (TOTAL_HP(user) / 16));
+        if(do_damage_residual(user, (TOTAL_HP(user) / 16)))
+            enqueue_message(NULL, user, STRING_SANDSTORM_BUFFET, MOVE_HAIL);
+
     }
     return true;
 }
