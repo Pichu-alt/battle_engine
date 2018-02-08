@@ -39,7 +39,8 @@ struct ability_data abilities[] = {
 		.on_damage = sturdy_on_dmg,
 	},
 	{
-		// DAMP
+		// Damp
+		.a_flags = A_FLAG_AFTERMATH_DMG_PREVENT,
 	},
 	{
 		// Limber
