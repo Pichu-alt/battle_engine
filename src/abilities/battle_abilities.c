@@ -89,7 +89,15 @@ u8 limber_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* ac
     return true;
 }
 
-// SANDVEIL
+// Sand Veil
+u16 sand_veil_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (IS_WEATHER_SANDSTORM && stat_id == STAT_EVASION) {
+        return PERCENT(acb->data_ptr, 120);
+    }
+    return acb->data_ptr;
+}
 
 // Static
 u8 static_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -320,9 +328,26 @@ u8 serenegrace_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callba
     return true;
 }
 
-// SWIFTSWIM
+// Swift Swim
+u16 swift_swim_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (IS_WEATHER_RAINING && stat_id == STAT_SPEED) {
+        return (acb->data_ptr << 1);
+    }
+    return acb->data_ptr;
+}
 
-// CHLOROPHYLL
+// Chlorophyll
+u16 chlorophyll_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (IS_WEATHER_SUNNY && stat_id == STAT_SPEED) {
+        return (acb->data_ptr << 1);
+    }
+    return acb->data_ptr;
+}
+
 
 // TRACE
 
@@ -379,7 +404,7 @@ enum TryHitMoveStatus soundproof_on_tryhit(u8 user, u8 src, u16 move, struct ano
     return TRYHIT_TARGET_MOVE_IMMUNITY;
 }
 
-// RAINDISH
+// Rain Dish
 
 // Sand Stream
 void sandstream_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -698,7 +723,16 @@ void rivalry_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback*
 
 // STEADFAST
 
-// SNOWCLOAK
+// Snow Cloak
+u16 snow_cloak_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (IS_WEATHER_HAIL && stat_id == STAT_EVASION) {
+        return PERCENT(acb->data_ptr, 120);
+    }
+    return acb->data_ptr;
+}
+
 
 // GLUTTONY
 
@@ -1174,7 +1208,15 @@ bool big_pecks_on_stat_boost(u8 user, u8 src, u16 move, struct anonymous_callbac
     return (!(CURRENT_ACTION->priv[0] == DEFENSE_MOD));
 }
 
-// SANDRUSH
+// Sand Rush
+u16 sand_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (IS_WEATHER_SANDSTORM && stat_id == STAT_SPEED) {
+        return (acb->data_ptr << 1);
+    }
+    return acb->data_ptr;
+}
 
 // WONDERSKIN
 
@@ -1566,7 +1608,7 @@ u8 merciless_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callback
 
 // STAKEOUT
 
-// WATERBUBBLE
+// Water Bubble
 u16 water_bubble_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 {
     // boost water attacks
@@ -1614,9 +1656,17 @@ void steelworker_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callb
 
 // BERSERK
 
-// SLUSHRUSH
+// Slush Rush
+u16 slush_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (IS_WEATHER_HAIL && stat_id == STAT_SPEED) {
+        return (acb->data_ptr << 1);
+    }
+    return acb->data_ptr;
+}
 
-// LONGREACH
+// Long Reach
 u8 long_reach_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (user != src) return true;

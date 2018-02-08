@@ -184,6 +184,15 @@ extern u16 quick_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_cal
 extern u16 plus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 minus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u8 comatose_on_status(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+
+extern u16 slush_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 sand_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 swift_swim_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 chlorophyll_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 sand_veil_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 snow_cloak_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+
+
 extern void download_on_start(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);

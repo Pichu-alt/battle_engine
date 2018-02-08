@@ -48,6 +48,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Sand Veil
+		.on_stat = sand_veil_on_stat,
 		.a_flags = A_FLAG_SANDSTORM_DMG_PREVENT,
 	},
 	{
@@ -140,10 +141,12 @@ struct ability_data abilities[] = {
 		.on_modify_move = serenegrace_on_modify_move,
 	},
 	{
-		// SWIFTSWIM
+		// Swift Swim
+		.on_stat = swift_swim_on_stat,
 	},
 	{
-		// CHLOROPHYLL
+		// Chlorophyll
+		.on_stat = chlorophyll_on_stat,
 	},
 	{
 		// Illuminate
@@ -319,6 +322,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Snow Cloak
+		.on_stat = snow_cloak_on_stat,
 		.a_flags = A_FLAG_HAIL_DMG_PREVENT,
 	},
 	{
@@ -340,7 +344,8 @@ struct ability_data abilities[] = {
 		.on_stat_boost_mod = simple_on_stat_boost_mod,
 	},
 	{
-		// DRYSKIN
+		// Dry Skin
+		.on_tryhit = water_absorb_on_tryhit,
 	},
 	{
 		// Download
@@ -553,6 +558,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Sand Rush
+		.on_stat = sand_rush_on_stat,
 		.a_flags = A_FLAG_SANDSTORM_DMG_PREVENT,
 	},
 	{
@@ -732,7 +738,7 @@ struct ability_data abilities[] = {
 		.on_effect = water_compaction_on_effect,
 	},
 	{
-		// Mercliss
+		// Merciless
 		.on_modify_move = merciless_on_modify_move,
 	},
 	{
@@ -755,6 +761,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Slush Rush
+		.on_stat = slush_rush_on_stat,
 		.a_flags = A_FLAG_HAIL_DMG_PREVENT,
 	},
 	{
