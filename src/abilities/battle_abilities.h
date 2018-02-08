@@ -27,18 +27,6 @@ typedef void (*AbilityOnDrainCallback)(u8 user, u8 source, u16 stat_id, struct a
 typedef u16 (*AbilityOnEffectiveness)(u8 target_type, u8 src, u16 move_type, struct anonymous_callback* acb); // acb->data == ((attacker << 16) | move_effectiveness);
 typedef void(*AbilityOnFaintCallback)(u8 user, u8 source, u16 stat_id, struct anonymous_callback* acb);
 
-struct ability_flags {
-    u8 recoil_damage_prevention : 1;
-    u8 sandstorm_damage_prevention : 1;
-    u8 hail_damage_prevention : 1;
-    u8 powder_damage_prevention : 1;
-};
-
-union ability_flags_union {
-    struct ability_flags flag_data;
-    u32 value;
-};
-
 struct ability_data {
     AbilityBeforeTurn before_turn;
     AbilityOnStart on_start;
@@ -59,17 +47,21 @@ struct ability_data {
     AbilityAfterStatBoostModCallback after_stat_boost_mod;
     AbilityOnResidualCallback on_residual;
     AbilityOnFaintCallback on_faint;
-    union ability_flags_union a_flags;
+    u32 a_flags;
 };
 
 extern struct ability_data abilities[];
 extern const pchar ability_names[][17];
 
 /* Ability Flags */
-#define FLAG_RECOIL_DMG_PREVENT (1 << 1)
-#define FLAG_SANDSTORM_DMG_PREVENT (1 << 2)
-#define FLAG_HAIL_DMG_PREVENT (1 << 3)
-#define FLAG_POWDER_DMG_PREVENT (1 << 4)
+#define A_FLAG_RECOIL_DMG_PREVENT (1 << 1)
+#define A_FLAG_SANDSTORM_DMG_PREVENT (1 << 2)
+#define A_FLAG_HAIL_DMG_PREVENT (1 << 3)
+#define A_FLAG_POWDER_EFX_PREVENT (1 << 4)
+#define A_FLAG_AFTERMATH_DMG_PREVENT (1 << 5)
+#define A_FLAG_INDIRECT_DMG_PREVENT (1 << 6)
+
+#define HAS_ABILITY_FLAG(ability, flag) (abilities[ability].a_flags & flag)
 
 /* Callback externs */
 extern u8 ability_none_on_effect(u8 user, u8 source, u16 move, struct anonymous_callback* acb);

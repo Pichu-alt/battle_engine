@@ -57,7 +57,8 @@ void do_damage(u8 bank_index, u16 dmg)
 
 bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags)
 {
-    if(dmg && BANK_ABILITY(bank_index) != ABILITY_MAGICGUARD && !((abilities[BANK_ABILITY(bank_index)].a_flags.value) & ability_flags)) {
+    u8 ability = BANK_ABILITY(bank_index);
+    if(dmg && !HAS_ABILITY_FLAG(ability, A_FLAG_INDIRECT_DMG_PREVENT) && !HAS_ABILITY_FLAG(ability, ability_flags)) {
         do_damage(bank_index, dmg);
         return true;
     }

@@ -190,9 +190,9 @@ u8 mind_blown_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* ac
 {
     if (user != src) return true;
     if (B_CURRENT_HP(user) < (TOTAL_HP(user) >> 1)) {
-        do_damage_residual(user, B_CURRENT_HP(user), FLAG_RECOIL_DMG_PREVENT);
+        do_damage_residual(user, B_CURRENT_HP(user), A_FLAG_RECOIL_DMG_PREVENT);
     } else {
-        do_damage_residual(user, (TOTAL_HP(user) >> 1), FLAG_RECOIL_DMG_PREVENT);
+        do_damage_residual(user, (TOTAL_HP(user) >> 1), A_FLAG_RECOIL_DMG_PREVENT);
     }
     return true;
 }

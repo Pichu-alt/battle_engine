@@ -257,7 +257,7 @@ u8 effect_spore_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb
 {
     if ((TARGET_OF(user) != src) || (user == src)) return true;
     // Immunity in the case of overcoat
-    if (BANK_ABILITY(user) == ABILITY_OVERCOAT) return true;
+    if (HAS_ABILITY_FLAG(BANK_ABILITY(user), A_FLAG_POWDER_EFX_PREVENT)) return true;
     if (!B_MOVE_CONTACT(user)) return true;
     u16 rand_num = rand_range(0, 100);
     if (rand_num < 10) {
@@ -906,7 +906,7 @@ u8 aftermath_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb
     if ((TARGET_OF(user) != src) || (user == src)) return true;
 	if (!B_MOVE_CONTACT(user)) return true;
         if (B_CURRENT_HP(src) < 1)
-            do_damage_residual(user, TOTAL_HP(user) >> 2, NULL);
+            do_damage_residual(user, TOTAL_HP(user) >> 2, A_FLAG_AFTERMATH_DMG_PREVENT);
 	return true;
 }
 

@@ -47,7 +47,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Sand Veil
-		.a_flags.flag_data.sandstorm_damage_prevention = true,
+		.a_flags = A_FLAG_SANDSTORM_DMG_PREVENT,
 	},
 	{
 		// Static
@@ -318,7 +318,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Snow Cloak
-		.a_flags.flag_data.hail_damage_prevention = true,
+		.a_flags = A_FLAG_HAIL_DMG_PREVENT,
 	},
 	{
 		// GLUTTONY
@@ -439,8 +439,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Ice Body
-		.a_flags.flag_data.hail_damage_prevention = true,
-
+		.a_flags = A_FLAG_HAIL_DMG_PREVENT,
 	},
 	{
 		// Solid Rock
@@ -538,9 +537,7 @@ struct ability_data abilities[] = {
 	{
 		// Overcoat
 		.on_tryhit = overcoat_on_tryhit,
-		.a_flags.flag_data.hail_damage_prevention = true,
-		.a_flags.flag_data.sandstorm_damage_prevention = true,
-		.a_flags.flag_data.powder_damage_prevention = true,
+		.a_flags = (A_FLAG_SANDSTORM_DMG_PREVENT | A_FLAG_HAIL_DMG_PREVENT | A_FLAG_POWDER_EFX_PREVENT),
 	},
 	{
 		// Poison Touch
@@ -555,7 +552,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Sand Rush
-		.a_flags.flag_data.sandstorm_damage_prevention = true,
+		.a_flags = A_FLAG_SANDSTORM_DMG_PREVENT,
 	},
 	{
 		// WONDERSKIN
@@ -604,7 +601,7 @@ struct ability_data abilities[] = {
 	{
 		// Sand Force
 		.on_base_power = sand_force_on_base_power,
-		.a_flags.flag_data.sandstorm_damage_prevention = true,
+		.a_flags = A_FLAG_SANDSTORM_DMG_PREVENT,
 	},
 	{
 		// Iron Barbs
@@ -757,7 +754,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Slush Rush
-		.a_flags.flag_data.hail_damage_prevention = true,
+		.a_flags = A_FLAG_HAIL_DMG_PREVENT,
 	},
 	{
 		// LONGREACH

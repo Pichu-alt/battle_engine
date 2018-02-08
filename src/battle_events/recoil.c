@@ -24,7 +24,7 @@ void event_move_recoil(struct action* current_action) {
         enqueue_message(move, bank, STRING_RECOIL, 0);
     } else if (B_MOVE_DMG(bank) != 0 && moves[move].recoil > 0) {
         // normal recoil based on move damage
-        if(do_damage_residual(bank, PERCENT(B_MOVE_DMG(bank), moves[move].recoil), FLAG_RECOIL_DMG_PREVENT)) {
+        if(do_damage_residual(bank, PERCENT(B_MOVE_DMG(bank), moves[move].recoil), A_FLAG_RECOIL_DMG_PREVENT)) {
             enqueue_message(move, bank, STRING_RECOIL, 0);
         }
     }

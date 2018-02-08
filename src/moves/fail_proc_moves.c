@@ -15,7 +15,7 @@ u8 powder_on_tryhit_move(u8 user, u8 src, u16 move, struct anonymous_callback* a
     if (TARGET_OF(src) != user) return true;
     if (B_MOVE_HAS_TYPE(user, MTYPE_FIRE)) {
         u16 dmg = MIN((TOTAL_HP(user) >> 2), B_CURRENT_HP(user));
-        do_damage_residual(user, MAX(1, dmg), FLAG_POWDER_DMG_PREVENT);
+        do_damage_residual(user, MAX(1, dmg), A_FLAG_POWDER_EFX_PREVENT);
         return false;
     }
     return true;
