@@ -7,7 +7,7 @@
 
 extern void dprintf(const char * str, ...);
 extern u16 rand_range(u16 min, u16 max);
-extern void do_damage(u8 bank_index, u16 dmg);
+extern bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags);
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
 extern void do_heal(u8 bank_index, u8 heal);
 extern bool b_pkmn_has_type(u8 bank, enum PokemonType type);
@@ -20,8 +20,8 @@ u8 partial_dmg_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback*
         CLEAR_VOLATILE(user, VOLATILE_TRAPPED);
         return true;
     }
-    enqueue_message(acb->data_ptr, user, STRING_RESIDUAL_DMG, 0);
-    do_damage(user, MAX(1, (TOTAL_HP(user) / 8)));
+    if(do_damage_residual(user, MAX(1, (TOTAL_HP(user) / 8)), NULL))
+        enqueue_message(acb->data_ptr, user, STRING_RESIDUAL_DMG, 0);
     return true;
 }
 
@@ -74,8 +74,7 @@ u8 leech_seed_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* 
 {
     if (user != src) return true;
     u8 dmg = MAX(1, (TOTAL_HP(user) / 8));
-    do_damage(user, dmg);
-    if (dmg) {
+    if (do_damage_residual(user, dmg, NULL)) {
         CURRENT_MOVE(acb->data_ptr) = MOVE_LEECH_SEED;
         B_MOVE_DMG(acb->data_ptr) = dmg;
         TARGET_OF(acb->data_ptr) = user;

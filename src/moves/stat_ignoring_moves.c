@@ -2,9 +2,11 @@
 #include "../battle_data/pkmn_bank.h"
 #include "../battle_data/pkmn_bank_stats.h"
 #include "../battle_data/battle_state.h"
+#include "abilities/battle_abilities.h"
 
 extern void dprintf(const char * str, ...);
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
+extern bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags);
 
 /* Miracle eye */
 u16 miracle_eye_on_effectiveness(u8 target_type, u8 defender, u16 move_type, struct anonymous_callback* acb)
@@ -183,15 +185,14 @@ u8 photon_geyser_on_modify_move(u8 user, u8 src, u16 stat_id, struct anonymous_c
 }
 
 
-extern void do_damage(u8 bank_index, u16 dmg);
 /* Mind Blown */
 u8 mind_blown_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (user != src) return true;
     if (B_CURRENT_HP(user) < (TOTAL_HP(user) >> 1)) {
-        do_damage(user, B_CURRENT_HP(user));
+        do_damage_residual(user, B_CURRENT_HP(user), A_FLAG_RECOIL_DMG_PREVENT);
     } else {
-        do_damage(user, (TOTAL_HP(user) >> 1));
+        do_damage_residual(user, (TOTAL_HP(user) >> 1), A_FLAG_RECOIL_DMG_PREVENT);
     }
     return true;
 }

@@ -8,6 +8,7 @@
 extern u16 rand_range(u16, u16);
 extern void status_graphical_update(u8 bank, enum Effect status);
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
+extern bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags);
 extern void do_damage(u8 bank_index, u16 dmg);
 extern u16 get_damage(u8 attacker, u8 defender, u16 move);
 extern void dprintf(const char * str, ...);
@@ -64,8 +65,8 @@ u8 poison_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 	if (user != src) return true;
 	// do dmg
     u16 dmg = TOTAL_HP(user) / 8;
-    do_damage(user, MAX(1, dmg));
-    enqueue_message(0, user, STRING_RESIDUAL_STATUS_DMG, AILMENT_POISON);
+    if (do_damage_residual(user, MAX(1, dmg), NULL))
+        enqueue_message(0, user, STRING_RESIDUAL_STATUS_DMG, AILMENT_POISON);
     p_bank[user]->b_data.status_turns++;
 	return true;
 }
@@ -92,8 +93,8 @@ u8 burn_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 		dmg = MAX(1, TOTAL_HP(user) / 16);
 	else
 		dmg = MAX(1, TOTAL_HP(user) >> 3);
-    do_damage(user, dmg);
-    enqueue_message(0, user, STRING_RESIDUAL_STATUS_DMG, AILMENT_BURN);
+    if (do_damage_residual(user, dmg, NULL))
+        enqueue_message(0, user, STRING_RESIDUAL_STATUS_DMG, AILMENT_BURN);
     p_bank[user]->b_data.status_turns++;
 	return true;
 }
@@ -183,8 +184,8 @@ u8 toxic_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
         p_bank[user]->b_data.status_turns++;
     }
     u16 dmg = ((MAX(1, (TOTAL_HP(user) / 16))) * p_bank[user]->b_data.status_turns);
-    do_damage(user, dmg);
-    enqueue_message(0, user, STRING_RESIDUAL_STATUS_DMG, AILMENT_POISON);
+    if (do_damage_residual(user, MAX(1, dmg), NULL))
+        enqueue_message(0, user, STRING_RESIDUAL_STATUS_DMG, AILMENT_POISON);
 	return true;
 }
 

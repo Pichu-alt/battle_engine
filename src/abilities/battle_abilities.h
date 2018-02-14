@@ -47,10 +47,21 @@ struct ability_data {
     AbilityAfterStatBoostModCallback after_stat_boost_mod;
     AbilityOnResidualCallback on_residual;
     AbilityOnFaintCallback on_faint;
+    u32 a_flags;
 };
 
 extern struct ability_data abilities[];
 extern const pchar ability_names[][17];
+
+/* Ability Flags */
+#define A_FLAG_RECOIL_DMG_PREVENT (1 << 1)
+#define A_FLAG_SANDSTORM_DMG_PREVENT (1 << 2)
+#define A_FLAG_HAIL_DMG_PREVENT (1 << 3)
+#define A_FLAG_POWDER_EFX_PREVENT (1 << 4)
+#define A_FLAG_AFTERMATH_DMG_PREVENT (1 << 5)
+#define A_FLAG_INDIRECT_DMG_PREVENT (1 << 6)
+
+#define HAS_ABILITY_FLAG(ability, flag) (abilities[ability].a_flags & flag)
 
 /* Callback externs */
 extern u8 ability_none_on_effect(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
@@ -173,6 +184,15 @@ extern u16 quick_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_cal
 extern u16 plus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 minus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u8 comatose_on_status(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+
+extern u16 slush_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 sand_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 swift_swim_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 chlorophyll_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 sand_veil_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u16 snow_cloak_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+
+
 extern void download_on_start(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);

@@ -5,7 +5,7 @@
 
 extern u16 rand_range(u16, u16);
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
-extern void do_damage(u8 bank_index, u16 dmg);
+extern bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags);
 void set_status(u8 bank, enum Effect status, u8 inflictor);
 extern void stat_boost(u8 bank, u8 stat_id, s8 amount, u8 inflicting_bank);
 extern bool protection_effect_exists_side(u8 bank, u32 func);
@@ -86,8 +86,8 @@ u8 spiky_shield_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_ca
     if (IS_PROTECTABLE(move)) {
         enqueue_message(0, TARGET_OF(user), STRING_PROTECTED_SELF, 0);
         if(IS_CONTACT(move)) {
-            enqueue_message(MOVE_SPIKY_SHIELD, user, STRING_RESIDUAL_DMG, MOVE_SPIKY_SHIELD);
-            do_damage(user, TOTAL_HP(TARGET_OF(user)) / 8);
+            if(do_damage_residual(user, TOTAL_HP(TARGET_OF(user)) / 8, NULL))
+                enqueue_message(MOVE_SPIKY_SHIELD, user, STRING_RESIDUAL_DMG, MOVE_SPIKY_SHIELD);
         }
         return 3; // fail the move silently
     }

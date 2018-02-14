@@ -5,6 +5,7 @@
 #include "../moves/moves.h"
 #include "../battle_text/battle_pick_message.h"
 #include "battle_events/battle_events.h"
+#include "abilities/battle_abilities.h"
 
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
 extern u16 get_damage(u8 attacker, u8 defender, u16 move);
@@ -52,6 +53,16 @@ void do_damage(u8 bank_index, u16 dmg)
     struct action* a = prepend_action(bank_index, NULL, ActionDamage, EventDamageAnim);
     a->priv[0] = bank_index;
     a->priv[1] = dmg;
+}
+
+bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags)
+{
+    u8 ability = BANK_ABILITY(bank_index);
+    if(dmg && !HAS_ABILITY_FLAG(ability, A_FLAG_INDIRECT_DMG_PREVENT | ability_flags)) {
+        do_damage(bank_index, dmg);
+        return true;
+    }
+    return false;
 }
 
 void event_move_damage(struct action* current_action)
