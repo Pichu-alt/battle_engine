@@ -393,6 +393,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// NOGUARD
+		.on_tryhit = noguard_on_tryhit,
 	},
 	{
 		// STALL

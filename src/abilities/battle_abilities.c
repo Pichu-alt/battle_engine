@@ -925,6 +925,11 @@ void normalize_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback*
 // MAGICGUARD
 
 // NOGUARD
+enum TryHitMoveStatus noguard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return TRYHIT_USE_MOVE_NORMAL;
+    return TRYHIT_PASS;
+}
 
 // STALL
 
