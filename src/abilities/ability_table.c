@@ -280,6 +280,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// ROCKHEAD
+		.a_flags = A_FLAG_RECOIL_DMG_PREVENT,
 	},
 	{
 		// Drought

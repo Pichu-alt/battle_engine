@@ -676,6 +676,7 @@ u16 swarm_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 }
 
 // Rock Head
+/* A_FLAG_RECOIL_DMG_PREVENT flag in the ability table is used for this effect. */
 
 // Drought
 void drought_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
