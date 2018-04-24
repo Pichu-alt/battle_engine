@@ -131,6 +131,19 @@ void event_move_tryhit_external(struct action* current_action)
         enqueue_message(0, bank_index, STRING_FLINCHED, 0);
         B_FLINCH(bank_index) = 0;
         CURRENT_ACTION->event_state = EventMoveFailed;
+        for (u8 i = 0; i < BANK_MAX; i++) {
+            u8 ability = p_bank[i]->b_data.ability;
+            if ((abilities[ability].on_flinch) && (ACTIVE_BANK(i)))
+                add_callback(CB_ON_FLINCH, 0, 0, i, (u32)abilities[ability].on_flinch);
+        }
+        // run callbacks
+        build_execution_order(CB_ON_FLINCH);
+        bool temp_status = battle_master->executing;
+        battle_master->executing = true;
+        while (battle_master->executing) {
+            pop_callback(bank_index, move);
+        }
+        battle_master->executing = temp_status;
         return;
     }
     B_FLINCH(bank_index) = 0;

@@ -36,6 +36,7 @@
 #define CB_ON_STAT_BOOST_MOD 21
 #define CB_AFTER_STAT_BOOST_MOD 22
 #define CB_ON_DRAIN 23
+#define CB_ON_FLINCH 24
 
 
 struct anonymous_callback {
