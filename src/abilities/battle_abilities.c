@@ -372,6 +372,13 @@ u8 poisonpoint_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* a
 }
 
 // INNERFOCUS
+u8 inner_focus_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (TARGET_OF(user) != src) return true;
+    B_MOVE_FLINCH(user) = 0;
+    return true;
+}
+
 
 // Magma Armor
 u8 magmaarmor_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb)

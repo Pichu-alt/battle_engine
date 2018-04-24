@@ -191,7 +191,7 @@ extern u16 swift_swim_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_cal
 extern u16 chlorophyll_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 sand_veil_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 snow_cloak_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
-
+extern u8 inner_focus_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 extern void download_on_start(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);

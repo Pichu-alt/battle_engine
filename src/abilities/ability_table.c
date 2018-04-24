@@ -165,6 +165,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// INNERFOCUS
+		.on_modify_move = inner_focus_on_modify_move,
 	},
 	{
 		// Magma Armor
