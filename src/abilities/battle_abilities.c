@@ -742,6 +742,12 @@ void rivalry_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback*
 }
 
 // STEADFAST
+void steadfast_on_flinch(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return;
+    stat_boost(user, STAT_SPEED, 1, user);
+    return;
+}
 
 // Snow Cloak
 u16 snow_cloak_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)

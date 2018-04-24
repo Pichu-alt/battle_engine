@@ -322,6 +322,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// STEADFAST
+		.on_flinch = steadfast_on_flinch,
 	},
 	{
 		// Snow Cloak

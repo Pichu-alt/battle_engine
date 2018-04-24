@@ -26,6 +26,7 @@ typedef u8 (*AbilityOnResidualCallback)(u8 user, u8 source, u16 stat_id, struct 
 typedef void (*AbilityOnDrainCallback)(u8 user, u8 source, u16 stat_id, struct anonymous_callback* acb);
 typedef u16 (*AbilityOnEffectiveness)(u8 target_type, u8 src, u16 move_type, struct anonymous_callback* acb); // acb->data == ((attacker << 16) | move_effectiveness);
 typedef void(*AbilityOnFaintCallback)(u8 user, u8 source, u16 stat_id, struct anonymous_callback* acb);
+typedef void(*AbilityOnFlinchCallback)(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 
 struct ability_data {
     AbilityBeforeTurn before_turn;
@@ -47,6 +48,7 @@ struct ability_data {
     AbilityAfterStatBoostModCallback after_stat_boost_mod;
     AbilityOnResidualCallback on_residual;
     AbilityOnFaintCallback on_faint;
+    AbilityOnFlinchCallback on_flinch;
     u32 a_flags;
 };
 
@@ -192,7 +194,7 @@ extern u16 chlorophyll_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_ca
 extern u16 sand_veil_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 snow_cloak_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u8 inner_focus_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-
+extern void steadfast_on_flinch(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern void download_on_start(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus motor_drive_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
