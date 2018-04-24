@@ -184,7 +184,7 @@ extern u16 quick_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_cal
 extern u16 plus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 minus_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u8 comatose_on_status(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
-
+extern u8 pressure_on_effect(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 extern u16 slush_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 sand_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern u16 swift_swim_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);

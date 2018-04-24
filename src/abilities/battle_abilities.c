@@ -423,6 +423,18 @@ void sandstream_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* a
 }
 
 // PRESSURE
+u8 pressure_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((SIDE_OF(user) == SIDE_OF(src)) || (TARGET_OF(user) != src)) return true;
+    // reduce PP
+    if ((!HAS_VOLATILE(user, VOLATILE_MULTI_TURN)) && (!B_REDUCE_PP(user))) {
+        u8 pp_index = p_bank[user]->b_data.pp_index;
+        if (pp_index < 4) {
+            p_bank[user]->b_data.move_pp[pp_index]--;
+        }
+    }
+    return true;
+}
 
 // Thick Fat
 u16 thick_fat_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)

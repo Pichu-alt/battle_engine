@@ -191,6 +191,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// PRESSURE
+		.on_effect = pressure_on_effect,
 	},
 	{
 		// THICKFAT
