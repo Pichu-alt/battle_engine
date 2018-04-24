@@ -54,6 +54,7 @@ enum TryHitMoveStatus {
     TRYHIT_USE_MOVE_NORMAL,
     TRYHIT_TARGET_MOVE_IMMUNITY,
     TRYHIT_FAIL_SILENTLY,
+    TRYHIT_PASS,
 };
 
 struct battle_selection_cursor {

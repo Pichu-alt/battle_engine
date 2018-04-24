@@ -161,6 +161,9 @@ void event_move_tryhit_external(struct action* current_action)
         case TRYHIT_FAIL_SILENTLY:
             B_MOVE_FAILED(bank_index) = true;
             break;
+        case TRYHIT_PASS:
+            current_action->event_state++;
+            return;
         default:
             break;
     };
