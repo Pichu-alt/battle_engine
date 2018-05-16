@@ -508,7 +508,8 @@ struct ability_data abilities[] = {
 		.on_effect = cursed_body_on_effect,
 	},
 	{
-		// HEALER
+		// healer
+		.on_residual = healer_on_residual,
 	},
 	{
 		// FRIENDGUARD

@@ -1139,6 +1139,13 @@ u8 cursed_body_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* a
 }
 
 // HEALER
+u8 healer_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((user == src) || (SIDE_OF(user) != SIDE_OF(src))) return true;
+    if (B_STATUS(user) != AILMENT_NONE)
+            set_status(user, EFFECT_CURE, user);
+    return true;
+}
 
 // FRIENDGUARD
 void friend_guard_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
