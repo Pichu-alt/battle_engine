@@ -1065,6 +1065,12 @@ void reckless_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback
 // FLOWERGIFT
 
 // BADDREAMS
+u8 bad_dreams_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb) {
+    if (user == src) return true;
+    if ((B_STATUS(user) ==  AILMENT_SLEEP) || (BANK_ABILITY(user) == ABILITY_COMATOSE))
+        do_damage(user, MAX(1, TOTAL_HP(user) >> 3));
+    return true;
+}
 
 // PICKPOCKET [Message is to be added]
 void pick_pocket_on_secondary(u8 user, u8 src, u16 move, struct anonymous_callback* acb)

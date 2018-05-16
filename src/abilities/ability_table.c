@@ -479,6 +479,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// BADDREAMS
+		.on_residual = bad_dreams_on_residual,
 	},
 	{
 		// Pickpocket
