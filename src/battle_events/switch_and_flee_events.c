@@ -100,6 +100,13 @@ void event_switch(struct action* current_action)
 }
 
 
+void event_switch_mid_battle(struct action* current_action)
+{
+    move_on_switch_cb(ACTION_BANK);
+    enqueue_message(MOVE_NONE, ACTION_BANK, STRING_RETREAT_MON, 0);
+    prepend_action(ACTION_BANK, ACTION_BANK, ActionHighPriority, EventForcedSwitch);
+}
+
 void event_pre_switch(struct action* current_action)
 {
     if (bank_trapped(ACTION_BANK)) {

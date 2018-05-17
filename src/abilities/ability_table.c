@@ -766,7 +766,8 @@ struct ability_data abilities[] = {
 		.on_base_power = steelworker_on_base_power,
 	},
 	{
-		// BERSERK
+		// Berserk
+		.on_effect = berserk_on_effect,
 	},
 	{
 		// Slush Rush

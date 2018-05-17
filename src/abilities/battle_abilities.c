@@ -1628,7 +1628,7 @@ u8 stamina_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 }
 
 // wimp out
-// Emergency exit - same as wimpout
+// Emergency exit - same as wimp out
 u8 wimp_out_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (bank_trapped(src)) return true;
@@ -1710,6 +1710,14 @@ void steelworker_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callb
 }
 
 // BERSERK
+u8 berserk_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+if ((B_LAST_DMG(src) > 0) && ((B_CURRENT_HP(src) << 1) < TOTAL_HP(src)) && (!HAS_VOLATILE(src, VOLATILE_BERSERK))) {
+        add_volatile(src, VOLATILE_BERSERK);
+        stat_boost(src, ATTACK_MOD, 1, user);
+    }
+    return true;
+}
 
 // Slush Rush
 u16 slush_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
