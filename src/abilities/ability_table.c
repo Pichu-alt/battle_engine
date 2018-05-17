@@ -791,6 +791,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// SURGESURFER
+		.on_stat = surge_surfer_on_stat,
 	},
 	{
 		// SCHOOLING

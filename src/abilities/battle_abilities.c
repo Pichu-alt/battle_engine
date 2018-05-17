@@ -1784,7 +1784,14 @@ void galvanize_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback*
 }
 
 // SURGESURFER
-
+u16 surge_surfer_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if (battle_master->field_state.is_electric_terrain && stat_id == SPEED_MOD) {
+        return PERCENT(acb->data_ptr, 200);
+    }
+    return acb->data_ptr;
+}
 // SCHOOLING
 
 // DISGUISE
