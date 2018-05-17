@@ -736,9 +736,11 @@ struct ability_data abilities[] = {
 	},
 	{
 		// WIMPOUT
+		.on_effect = wimp_out_on_effect,
 	},
 	{
 		// EMERGENCYEXIT
+		.on_effect = wimp_out_on_effect,
 	},
 	{
 		// Water Compaction

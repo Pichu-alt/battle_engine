@@ -21,6 +21,7 @@ extern bool do_damage_residual(u8 bank_index, u16 dmg, u32 ability_flags);
 extern void flat_heal(u8 bank, u16 heal);
 extern bool b_pkmn_has_type(u8 bank, enum PokemonType type);
 extern void do_heal(u8 bank_index, u8 percent_heal);
+extern bool bank_trapped(u8 bank);
 
 /* Note: Illuminate and Honey Gather have no In-Battle effect so they are not present here*/
 
@@ -1626,9 +1627,19 @@ u8 stamina_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     return true;
 }
 
-// WIMPOUT
+// wimp out
+// Emergency exit - same as wimpout
+u8 wimp_out_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (bank_trapped(src)) return true;
+    if ((B_LAST_DMG(src) > 0) && ((B_CURRENT_HP(src) << 1) < TOTAL_HP(src))) {
+        // swap here
+        prepend_action(src, src, ActionHighPriority, EventEndAction);
+        event_switch_mid_battle(CURRENT_ACTION->prev_action);
+    }
+    return true;
+}
 
-// EMERGENCYEXIT
 
 // Water Compaction
 u8 water_compaction_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)

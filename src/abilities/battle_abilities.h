@@ -210,5 +210,10 @@ extern enum TryHitMoveStatus flash_fire_on_tryhit(u8 user, u8 src, u16 move, str
 extern enum TryHitMoveStatus noguard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 bad_dreams_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 healer_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 wimp_out_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+
+
+
+
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */
