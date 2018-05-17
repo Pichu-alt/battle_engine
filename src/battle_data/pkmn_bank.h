@@ -175,6 +175,7 @@ struct local_battler_data {
     u8 ate_berry : 1;
     u8 is_trapped : 1;
     u8 is_grounded : 1;
+    u8 did_crit : 1;
 
 	// stockpile
     u8 stockpile_uses : 2;

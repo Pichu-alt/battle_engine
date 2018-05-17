@@ -213,6 +213,7 @@ extern u8 healer_on_residual(u8 user, u8 src, u16 move, struct anonymous_callbac
 extern u8 wimp_out_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 berserk_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u16 surge_surfer_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern void sniper_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 
 

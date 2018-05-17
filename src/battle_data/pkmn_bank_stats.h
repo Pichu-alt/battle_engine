@@ -145,6 +145,7 @@ extern u16 stage_modify_stat(u16 stat, s8 mod, u8 id, u8 bank);
 #define B_GET_MOVE_PP(bank, id) (p_bank[bank]->b_data.move_pp[id])
 #define B_LAST_DMG(bank) (p_bank[bank]->b_data.last_damage)
 #define ALLY_OF(bank) (bank ^ 1)
+#define B_DID_CRIT(bank) (p_bank[bank]->b_data.did_crit)
 
 /*
  *

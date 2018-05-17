@@ -194,6 +194,7 @@ u16 modify_damage(u16 base_damage, u8 attacker, u8 defender, u16 move)
         if ((rand_range(0, 100)) <= B_CRITCHANCE_STAT(attacker)) {
             B_MOVE_WILL_CRIT(attacker) = true;
             modded_base = PERCENT(modded_base, 150);
+            B_DID_CRIT(attacker) = true;
         }
         p_bank[attacker]->b_data.crit_mod -= MOVE_CRIT(move);
     }

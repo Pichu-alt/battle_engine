@@ -387,6 +387,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// SNIPER
+		.on_damage = sniper_on_damage,
 	},
 	{
 		// MAGICGUARD

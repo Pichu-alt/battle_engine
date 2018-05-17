@@ -922,6 +922,12 @@ void normalize_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback*
 
 
 // SNIPER
+void sniper_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return;
+	if (B_DID_CRIT(user))
+	    B_MOVE_DMG(user) = PERCENT(B_MOVE_DMG(user), 200);
+}
 
 // MAGICGUARD
 
@@ -1267,7 +1273,6 @@ u16 sand_rush_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* a
 
 // Analytic
 extern u8 doom_desire_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-
 void analytic_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (user != src) return;
