@@ -62,6 +62,7 @@ extern const pchar ability_names[][17];
 #define A_FLAG_POWDER_EFX_PREVENT (1 << 4)
 #define A_FLAG_AFTERMATH_DMG_PREVENT (1 << 5)
 #define A_FLAG_INDIRECT_DMG_PREVENT (1 << 6)
+#define A_FLAG_SECONDARIES_PREVENT (1 << 7)
 
 #define HAS_ABILITY_FLAG(ability, flag) (abilities[ability].a_flags & flag)
 
@@ -222,7 +223,7 @@ extern enum TryHitMoveStatus aroma_veil_on_tryhit(u8 user, u8 src, u16 move, str
 extern void primordial_sea_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 extern void desolate_land_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 extern void delta_stream_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
-
+extern void sheer_force_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 
 

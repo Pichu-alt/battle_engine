@@ -490,7 +490,9 @@ struct ability_data abilities[] = {
 		.after_stat_boost_mod = pick_pocket_on_secondary,
 	},
 	{
-		// SHEERFORCE
+		// Sheer Force
+		.on_base_power = sheer_force_on_base_power,
+		.a_flags = A_FLAG_SECONDARIES_PREVENT,
 	},
 	{
 		// Contrary

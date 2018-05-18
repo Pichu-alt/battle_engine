@@ -1112,7 +1112,15 @@ void pick_pocket_on_secondary(u8 user, u8 src, u16 move, struct anonymous_callba
     }
 }
 
-// SHEERFORCE
+// Sheer Force
+void sheer_force_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return;
+    if ((moves[move].procs) != NULL || M_FLINCH(move)) {
+        B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), 130);
+    }
+}
+
 
 // Contary
 bool contrary_on_stat_boost_mod(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)

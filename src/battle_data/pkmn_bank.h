@@ -98,6 +98,7 @@ enum Volatiles {
     VOLATILE_DISABLE,
     VOLATILE_TRUANT,
     VOLATILE_BERSERK,
+    VOLATILE_SHEER_FORCE,
 };
 
 

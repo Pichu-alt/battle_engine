@@ -308,5 +308,10 @@ void set_attack_bm_inplace(u16 move_id, u8 bank)
     B_MOVE_WILL_CRIT(bank) = false;
     B_MOVE_DMG(bank) = 0;
     B_MOVE_EFFECTIVENESS(bank) = 0;
-    battle_master->b_moves[bank].b_procs = *(moves[move_id].procs);
+    if (!HAS_ABILITY_FLAG(BANK_ABILITY(bank), A_FLAG_SECONDARIES_PREVENT)) {
+        battle_master->b_moves[bank].b_procs = *(moves[move_id].procs);
+    } else {
+        battle_master->b_moves[bank].flinch = 0;
+
+    }
 }
