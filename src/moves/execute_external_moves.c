@@ -238,7 +238,7 @@ u8 copycat_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callback* 
 u16 magic_coat_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
 {
 	if ((user == source) || ACTION_BOUNCED || (!IS_REFLECTABLE(move)))
-		return true;
+		return TRYHIT_USE_MOVE_NORMAL;
 	struct action* a = next_action(user, user, ActionMove, EventMoveTryHit);
 	a->move = CURRENT_MOVE(user);
 	a->target = user;
@@ -247,7 +247,7 @@ u16 magic_coat_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_callba
 	enqueue_message(CURRENT_MOVE(user), source, STRING_BOUNCED_BACK, 0);
 	B_MOVE_FAILED(user) = true;
 	acb->in_use = false;
-	return 3; // fail silently
+	return TRYHIT_FAIL_SILENTLY; // fail silently
 }
 
 enum TryHitMoveStatus magic_coat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)

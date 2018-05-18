@@ -608,6 +608,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// MAGICBOUNCE
+		.on_tryhit = magic_bounce_on_tryhit,
 	},
 	{
 		// Sap Sipper

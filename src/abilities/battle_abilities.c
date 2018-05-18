@@ -1377,6 +1377,23 @@ u8 rattled_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 
 // MAGICBOUNCE
 
+enum TryHitMoveStatus magic_bounce_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) == src) && (!ACTION_BOUNCED) && (IS_REFLECTABLE(move))) {
+        struct action* a = next_action(user, user, ActionMove, EventMoveTryHit);
+        a->move = CURRENT_MOVE(user);
+        a->target = user;
+        a->has_bounced = true;
+        a->reset_move_config = true;
+        enqueue_message(CURRENT_MOVE(user), src, STRING_BOUNCED_BACK, 0);
+        B_MOVE_FAILED(user) = true;
+        acb->in_use = false;
+        return TRYHIT_FAIL_SILENTLY;
+    } else {
+        return TRYHIT_USE_MOVE_NORMAL;
+    }
+}
+
 // Sap Sipper
 enum TryHitMoveStatus sap_sipper_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
