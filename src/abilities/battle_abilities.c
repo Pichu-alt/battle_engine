@@ -22,6 +22,7 @@ extern void flat_heal(u8 bank, u16 heal);
 extern bool b_pkmn_has_type(u8 bank, enum PokemonType type);
 extern void do_heal(u8 bank_index, u8 percent_heal);
 extern bool bank_trapped(u8 bank);
+extern void event_switch_mid_battle(struct action* current_action);
 
 /* Note: Illuminate and Honey Gather have no In-Battle effect so they are not present here*/
 
@@ -77,7 +78,15 @@ void sturdy_on_dmg(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     }
 }
 
-// DAMP
+// Damp
+/* Aftermath immunity is done through ability flag. See ability_table.c */
+enum TryHitMoveStatus damp_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((move == MOVE_SELFDESTRUCT) || (move == MOVE_EXPLOSION))
+        return TRYHIT_CANT_USE_MOVE;
+    return TRYHIT_USE_MOVE_NORMAL;
+}
+
 
 // Limber
 u8 limber_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb)
@@ -257,9 +266,20 @@ u8 rough_skin_variations_on_effect(u8 user, u8 src, u16 move, struct anonymous_c
 	return true;
 }
 
-// WONDERGUARD
+// Wonder Guard
+enum TryHitMoveStatus wonder_guard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((user == src) || (B_MOVE_IS_STATUS(user) || CURRENT_MOVE(user) == MOVE_STRUGGLE))
+        return TRYHIT_USE_MOVE_NORMAL;
+    if (B_MOVE_EFFECTIVENESS(user) != TE_SUPER_EFFECTIVE)
+        return TRYHIT_TARGET_MOVE_IMMUNITY;
+    else
+        return TRYHIT_USE_MOVE_NORMAL;
+}
 
-// LEVITATE
+// Levitate
+/* Ability effect is added in as a clause to the is_grounded function. See grounded_effect.c */
+
 
 // Effect Spore
 u8 effect_spore_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -929,7 +949,8 @@ void sniper_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 	    B_MOVE_DMG(user) = PERCENT(B_MOVE_DMG(user), 200);
 }
 
-// MAGICGUARD
+// Magic Guard
+/* Implemented with an ability flag. See ability_table.c */
 
 // NOGUARD
 enum TryHitMoveStatus noguard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -1197,7 +1218,13 @@ void flare_boost_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callb
 
 // HARVEST
 
-// TELEPATHY
+// Telepathy
+enum TryHitMoveStatus telepathy_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) == src) && (src == ALLY_OF(user)))
+        return TRYHIT_FAIL_SILENTLY;
+    return TRYHIT_USE_MOVE_NORMAL;
+}
 
 // MOODY
 u8 moody_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb) {
@@ -1232,7 +1259,6 @@ u8 moody_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb) 
 }
 
 // Overcoat
-/* TO-DO: Implement weather immunity */
 enum TryHitMoveStatus overcoat_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if ((TARGET_OF(user) != src) || (user == src) || !(IS_POWDER(move))) return TRYHIT_USE_MOVE_NORMAL;

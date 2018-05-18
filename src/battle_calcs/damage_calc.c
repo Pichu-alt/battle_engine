@@ -26,6 +26,8 @@ u16 type_effectiveness_mod(u8 attacker, u8 defender, u16 move)
                 u16 move_effectiveness = MOVE_EFFECTIVENESS(target_type, move_type);
                 if (is_grounded(defender) && (move_type == MTYPE_GROUND) && (target_type == MTYPE_FLYING)) {
                     move_effectiveness = 100;
+                } else if (!is_grounded(defender) && (move_type == MTYPE_GROUND)) {
+                    move_effectiveness = 0;
                 }
 
                 // add ability immunity callbacks

@@ -40,6 +40,7 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Damp
+		.on_tryhit = damp_on_tryhit,
 		.a_flags = A_FLAG_AFTERMATH_DMG_PREVENT,
 	},
 	{
@@ -112,7 +113,8 @@ struct ability_data abilities[] = {
 		.on_effect = rough_skin_variations_on_effect,
 	},
 	{
-		// WONDERGUARD
+		// Wonder Guard
+		.on_tryhit = wonder_guard_on_tryhit,
 	},
 	{
 		// LEVITATE
@@ -390,7 +392,8 @@ struct ability_data abilities[] = {
 		.on_damage = sniper_on_damage,
 	},
 	{
-		// MAGICGUARD
+		// Magic Guard
+		.a_flags = A_FLAG_INDIRECT_DMG_PREVENT,
 	},
 	{
 		// NOGUARD
@@ -542,7 +545,8 @@ struct ability_data abilities[] = {
 		// HARVEST
 	},
 	{
-		// TELEPATHY
+		// telepathy
+		.on_tryhit = telepathy_on_tryhit,
 	},
 	{
 		// Moody

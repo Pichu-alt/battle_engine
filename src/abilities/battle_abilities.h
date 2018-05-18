@@ -214,8 +214,9 @@ extern u8 wimp_out_on_effect(u8 user, u8 src, u16 move, struct anonymous_callbac
 extern u8 berserk_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u16 surge_surfer_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
 extern void sniper_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-
-
+extern enum TryHitMoveStatus damp_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus wonder_guard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus telepathy_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */

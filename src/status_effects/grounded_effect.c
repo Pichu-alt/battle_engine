@@ -20,6 +20,7 @@ bool is_grounded(u8 bank) {
     if (HAS_VOLATILE(bank, VOLATILE_THOUSAND_ARROWS)) return true;
     // ironball active true
     // levitate active here false
+    if (BANK_ABILITY(bank) == ABILITY_LEVITATE) return false;
     // Magnet rise here false
     if (has_callback_src((u32)magnet_rise_on_residual, bank)) return false;
     // telekinesis here false
