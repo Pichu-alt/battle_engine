@@ -641,7 +641,8 @@ struct ability_data abilities[] = {
 		// TERAVOLT
 	},
 	{
-		// AROMAVEIL
+		// Aroma Veil
+		.on_tryhit = aroma_veil_on_tryhit,
 	},
 	{
 		// Flower Veil
@@ -728,24 +729,27 @@ struct ability_data abilities[] = {
 		// AURABREAK
 	},
 	{
-		// PRIMORDIALSEA
+		// Primordial Sea
+		.on_start = primordial_sea_on_start,
 	},
 	{
-		// DESOLATELAND
+		// Desolate Land
+		.on_start = desolate_land_on_start,
 	},
 	{
-		// DELTASTREAM
+		// Delta stream
+		.on_start = delta_stream_on_start,
 	},
 	{
 		// Stamina
 		.on_effect = stamina_on_effect,
 	},
 	{
-		// WIMPOUT
+		// Wimp out
 		.on_effect = wimp_out_on_effect,
 	},
 	{
-		// EMERGENCYEXIT
+		// Emergency Exit
 		.on_effect = wimp_out_on_effect,
 	},
 	{

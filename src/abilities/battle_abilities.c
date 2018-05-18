@@ -1446,7 +1446,18 @@ u16 victory_star_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback
 
 // TERAVOLT
 
-// AROMAVEIL
+// Aroma Veil
+u16 aroma_veil_banned[] = {MOVE_ATTRACT, MOVE_DISABLE, MOVE_ENCORE, MOVE_HEALBLOCK, MOVE_TAUNT, MOVE_TORMENT};
+enum TryHitMoveStatus aroma_veil_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (SIDE_OF(TARGET_OF(user)) == SIDE_OF(src)) {
+        for (u8 i = 0; i < (sizeof(aroma_veil_banned)/ sizeof(u16)); i++) {
+            if (move == aroma_veil_banned[i])
+                return TRYHIT_TARGET_MOVE_IMMUNITY;
+        }
+    }
+    return TRYHIT_USE_MOVE_NORMAL;
+}
 
 // Flower Veil
 bool flower_veil_on_stat_boost(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -1660,11 +1671,26 @@ void aerilate_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* 
 
 // AURABREAK
 
-// PRIMORDIALSEA
+// Primodial Sea
+extern void primordial_sea_init_effect(void);
+void primordial_sea_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
+{
+    primordial_sea_init_effect();
+}
 
-// DESOLATELAND
+// Desolate Land
+extern void desolate_land_init_effect(void);
+void desolate_land_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
+{
+    desolate_land_init_effect();
+}
 
-// DELTASTREAM
+// Delta Stream
+extern void delta_stream_init_effect(void);
+void delta_stream_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb)
+{
+    delta_stream_init_effect();
+}
 
 // Stamina
 u8 stamina_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)

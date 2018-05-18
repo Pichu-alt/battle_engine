@@ -218,5 +218,15 @@ extern enum TryHitMoveStatus damp_on_tryhit(u8 user, u8 src, u16 move, struct an
 extern enum TryHitMoveStatus wonder_guard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus telepathy_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern enum TryHitMoveStatus magic_bounce_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus aroma_veil_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern void primordial_sea_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
+extern void desolate_land_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
+extern void delta_stream_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
+
+
+
+
+
+
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */
