@@ -1673,11 +1673,40 @@ void aerilate_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* 
 
 // PARENTALBOND
 
-// DARKAURA
+// Dark Aura
+void dark_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    bool reverse = false;
+    for (var i = 0; i < BANK_MAX; i++) {
+        if (BANK_ABILITY(i) == ABILITY_AURA_BREAK) {
+            reverse = true;
+            break;
+        }
+    }
+	if (B_MOVE_HAS_TYPE(user, MTYPE_DARK)) {
+	    B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), reverse ? 75 : 130);
+	}
+	return;
+}
 
-// FAIRYAURA
+// Fairy Aura
+void fairy_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    bool reverse = false;
+    for (var i = 0; i < BANK_MAX; i++) {
+        if (BANK_ABILITY(i) == ABILITY_AURA_BREAK) {
+            reverse = true;
+            break;
+        }
+    }
 
-// AURABREAK
+	if (B_MOVE_HAS_TYPE(user, MTYPE_FAIRY)) {
+	    B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), reverse ? 75 : 130);
+	}
+	return;
+}
+
+// Aura break - handled within Dark Aura and Fairy Aura
 
 // Primodial Sea
 extern void primordial_sea_init_effect(void);

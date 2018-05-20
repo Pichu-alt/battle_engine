@@ -722,13 +722,16 @@ struct ability_data abilities[] = {
 		// PARENTALBOND
 	},
 	{
-		// DARKAURA
+		// Dark Aura
+		.on_base_power = dark_aura_on_base_power,
 	},
 	{
-		// FAIRYAURA
+		// Fairy Aura
+		.on_base_power = fairy_aura_on_base_power,
 	},
 	{
-		// AURABREAK
+		// Aura Break
+		/* Handled within Dark aura and Fairy aura abilities */
 	},
 	{
 		// Primordial Sea

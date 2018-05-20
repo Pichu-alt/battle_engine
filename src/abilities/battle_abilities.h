@@ -224,7 +224,8 @@ extern void primordial_sea_on_start(u8 user, u8 source, u16 move, struct anonymo
 extern void desolate_land_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 extern void delta_stream_on_start(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
 extern void sheer_force_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-
+extern void fairy_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern void dark_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 
 
