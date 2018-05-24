@@ -33,6 +33,7 @@ u16 rain_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     }
     if (acb->duration == 0) {
         enqueue_message(NULL, NULL, STRING_RAIN_STOPPED, MOVE_RAIN_DANCE);
+        battle_master->field_state.is_raining = false;
     } else {
         enqueue_message(NULL, NULL, STRING_RAIN_FALLING, MOVE_RAIN_DANCE);
     }
@@ -125,6 +126,7 @@ u16 sun_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     }
     if (acb->duration == 0) {
         enqueue_message(NULL, NULL, STRING_SUNLIGHT_FADE, NULL);
+        battle_master->field_state.is_sunny = false;
     } else {
         enqueue_message(NULL, NULL, STRING_SUNLIGHT_STRONG, NULL);
     }
@@ -206,8 +208,10 @@ u16 sandstorm_on_residual_buffet(u8 user, u8 src, u16 move, struct anonymous_cal
         acb->data_ptr = 1;
     }
     if (acb->duration == 0) {
-        if (acb->data_ptr)
+        if (acb->data_ptr) {
             enqueue_message(NULL, NULL, STRING_SANDSTORM_END, NULL);
+            battle_master->field_state.is_sandstorm = false;
+        }
     } else {
         if (acb->data_ptr)
             enqueue_message(NULL, NULL, STRING_SANDSTORM_RAGE, NULL);
@@ -246,8 +250,10 @@ u16 hail_on_residual_buffet(u8 user, u8 src, u16 move, struct anonymous_callback
         acb->data_ptr = 1;
     }
     if (acb->duration == 0) {
-        if (acb->data_ptr)
+        if (acb->data_ptr) {
             enqueue_message(NULL, NULL, STRING_RAIN_STOPPED, MOVE_HAIL);
+            battle_master->field_state.is_hail = false;
+        }
     } else {
         if (acb->data_ptr)
             enqueue_message(NULL, NULL, STRING_RAIN_FALLING, MOVE_HAIL);
