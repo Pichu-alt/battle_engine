@@ -260,7 +260,12 @@ u8 own_tempo_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback*
 
 // SUCTIONCUPS
 
-// INTIMIDATE
+// Intimidate
+void intimidate_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user == src) return;
+    stat_boost(user, ATTACK_MOD, -1, src);
+}
 
 // SHADOWTAG
 
@@ -959,9 +964,26 @@ u8 hydration_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* a
 }
 
 
-// SOLARPOWER
+// Solar Power
+u8 solar_power_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return true;
+    if (battle_master->field_state.is_sunny || battle_master->field_state.is_desolate_land) {
+        do_damage(user, MAX(1, TOTAL_HP(user) >> 3));
+    }
+    return true;
+}
 
-// QUICKFEET
+u16 solar_power_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
+{
+    if (user != src) return acb->data_ptr;
+    if ((stat_id == SPATTACK_MOD) && (battle_master->field_state.is_sunny || battle_master->field_state.is_desolate_land)) {
+        return (PERCENT(acb->data_ptr, 150));
+    }
+    return acb->data_ptr;
+}
+
+// Quick Feet
 u16 quick_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
 {
     if (user != src) return acb->data_ptr;
@@ -1027,7 +1049,19 @@ void technician_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callba
 	}
 }
 
-// LEAFGUARD
+// Leaf Guard
+u8 leaf_guard_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb)
+{
+    if (TARGET_OF(user) == src) return true;
+    return false;
+}
+
+enum TryHitMoveStatus leaf_guard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return TRYHIT_USE_MOVE_NORMAL;
+    if (move == MOVE_YAWN) return TRYHIT_FAIL_SILENTLY;
+    return TRYHIT_USE_MOVE_NORMAL;
+}
 
 // KLUTZ
 
@@ -1123,7 +1157,15 @@ enum TryHitMoveStatus storm_drain_on_tryhit(u8 user, u8 src, u16 move, struct an
     return TRYHIT_FAIL_SILENTLY;
 }
 
-// ICEBODY
+// Ice Body
+u8 ice_body_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user == src) return true;
+    if (battle_master->field_state.is_hail) {
+        flat_heal(user, MAX(1, TOTAL_HP(user) >> 4));
+    }
+    return true;
+}
 
 // Snow Warning
 void snowwarning_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -1970,7 +2012,7 @@ u16 surge_surfer_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback
 // Corrosion
 /* Implemented directly in event_on_status */
 
-// COMATOSE
+// Comatose
 u8 comatose_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb)
 {
     if (user != src) return true;

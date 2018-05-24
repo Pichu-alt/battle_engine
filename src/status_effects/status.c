@@ -277,6 +277,7 @@ void confusion_on_inflict(u8 bank)
 void silent_cure_major(u8 bank) {
 	p_bank[bank]->b_data.status = AILMENT_NONE;
 	p_bank[bank]->b_data.status_turns = 0;
+	CLEAR_VOLATILE(bank, VOLATILE_SLEEP_TURN);
 	delete_callback_src((u32)toxic_on_residual, bank);
 	delete_callback_src((u32)paralyze_on_before_move, bank);
 	delete_callback_src((u32)paralyze_on_mod_stat, bank);
@@ -293,6 +294,7 @@ void clear_ailments_silent(u8 bank) {
 	p_bank[bank]->b_data.pseudo_ailment = AILMENT_NONE;
 	p_bank[bank]->b_data.status_turns = 0;
 	p_bank[bank]->b_data.confusion_turns = 0;
+	CLEAR_VOLATILE(bank, VOLATILE_SLEEP_TURN);
 	delete_callback_src((u32)confusion_on_residual, bank);
 	delete_callback_src((u32)confusion_on_before_move, bank);
 	delete_callback_src((u32)toxic_on_residual, bank);

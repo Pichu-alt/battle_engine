@@ -94,7 +94,8 @@ struct ability_data abilities[] = {
 		.on_tryhit = flash_fire_on_tryhit,
 	},
 	{
-		// SHIELDDUST
+		// Shield dust
+		.a_flags = A_FLAG_OPP_SECONDARIES_PREVENT,
 	},
 	{
 		// Own Tempo
@@ -104,7 +105,8 @@ struct ability_data abilities[] = {
 		// SUCTIONCUPS
 	},
 	{
-		// INTIMIDATE
+		// Intimidate
+		.on_start = intimidate_on_start,
 	},
 	{
 		// SHADOWTAG
@@ -384,7 +386,9 @@ struct ability_data abilities[] = {
 		.on_residual = hydration_on_residual,
 	},
 	{
-		// SOLARPOWER
+		// Solar Power
+		.on_residual = solar_power_on_residual,
+		.on_stat = solar_power_on_stat,
 	},
 	{
 		// Quick Feet
@@ -414,7 +418,10 @@ struct ability_data abilities[] = {
 		.on_base_power = technician_on_base_power,
 	},
 	{
-		// LEAFGUARD
+		// Leaf Guard
+		.on_tryhit = leaf_guard_on_tryhit,
+		.on_status = leaf_guard_on_status,
+
 	},
 	{
 		// KLUTZ
@@ -462,6 +469,7 @@ struct ability_data abilities[] = {
 	{
 		// Ice Body
 		.a_flags = A_FLAG_HAIL_DMG_PREVENT,
+		.on_residual = ice_body_on_residual,
 	},
 	{
 		// Solid Rock

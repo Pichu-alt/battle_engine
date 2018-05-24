@@ -63,7 +63,7 @@ extern const pchar ability_names[][17];
 #define A_FLAG_AFTERMATH_DMG_PREVENT (1 << 5)
 #define A_FLAG_INDIRECT_DMG_PREVENT (1 << 6)
 #define A_FLAG_SECONDARIES_PREVENT (1 << 7)
-
+#define A_FLAG_OPP_SECONDARIES_PREVENT (1 << 8)
 #define HAS_ABILITY_FLAG(ability, flag) (abilities[ability].a_flags & flag)
 
 /* Callback externs */
@@ -232,5 +232,12 @@ extern enum TryHitMoveStatus dry_skin_try_hit(u8 user, u8 src, u16 move, struct 
 extern void dry_skin_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 dry_skin_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 hydration_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u16 solar_power_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb);
+extern u8 solar_power_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 leaf_guard_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback* acb);
+extern enum TryHitMoveStatus leaf_guard_on_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 ice_body_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern void intimidate_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */
