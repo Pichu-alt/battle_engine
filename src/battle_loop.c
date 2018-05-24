@@ -64,7 +64,7 @@ void battle_loop()
 {
     CURRENT_ACTION = ACTION_HEAD;
     if (ACTION_HEAD != NULL) {
-    //    dprintf("action: %x\n", ACTION_HEAD);
+        //dprintf("action: %x\n", ACTION_HEAD);
         // Don't run actions for fainted banks
         if (!(ACTIVE_BANK(ACTION_HEAD->action_bank) || ACTION_HEAD->active_override)) {
             end_action(ACTION_HEAD);

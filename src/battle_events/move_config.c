@@ -116,8 +116,10 @@ void add_bank_move_actions()
         B_FLINCH(active_banks[i]) = 0;
     }
     /* Add turn end effects as actions */
-    add_action(0xFF, 0xFF, ActionResidual, EventResidualEffects);
-    add_action(0xFF, 0xFF, ActionHighPriority, EventWildBattleOver);
+    struct action* r = add_action(0xFF, 0xFF, ActionResidual, EventResidualEffects);
+    r->active_override = true;
+    struct action* bo = add_action(0xFF, 0xFF, ActionHighPriority, EventWildBattleOver);
+    bo->active_override = true;
 }
 
 

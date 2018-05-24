@@ -16,8 +16,9 @@ void event_residual_effects(struct action* current_action)
         case 0:
 			for (u8 i = 0; i < BANK_MAX; i++) {
 				u8 ability = p_bank[i]->b_data.ability;
-				if ((abilities[ability].on_residual) && (ACTIVE_BANK(i)))
+				if ((abilities[ability].on_residual) && (ACTIVE_BANK(i))) {
 					add_callback(CB_ON_RESIDUAL, 0, 0, i, (u32)abilities[ability].on_residual);
+				}
 			}
             build_execution_order(CB_ON_RESIDUAL);
             battle_master->executing = true;
