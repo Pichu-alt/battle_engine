@@ -227,8 +227,9 @@ extern void sheer_force_on_base_power(u8 user, u8 src, u16 move, struct anonymou
 extern void fairy_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern void dark_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 rain_dish_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-
-
-
+extern void cloud_nine_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern enum TryHitMoveStatus dry_skin_try_hit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern void dry_skin_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 dry_skin_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */

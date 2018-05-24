@@ -70,7 +70,8 @@ struct ability_data abilities[] = {
 		.on_status = oblivious_on_status,
 	},
 	{
-		// CLOUDNINE
+		// Cloud nine
+		.on_start = cloud_nine_on_start,
 	},
 	{
 		// Compound Eyes
@@ -309,7 +310,9 @@ struct ability_data abilities[] = {
 		.on_modify_move = battle_armor_variations_on_modify_move,
 	},
 	{
-		// AIRLOCK
+		// Air lock
+		/* Clone effect of cloud nine */
+		.on_start = cloud_nine_on_start,
 	},
 	{
 		// Tangled Feet
@@ -352,7 +355,9 @@ struct ability_data abilities[] = {
 	},
 	{
 		// Dry Skin
-		.on_tryhit = water_absorb_on_tryhit,
+		.on_tryhit = dry_skin_try_hit,
+		.on_base_power = dry_skin_on_base_power,
+		.on_residual = dry_skin_on_residual,
 	},
 	{
 		// Download

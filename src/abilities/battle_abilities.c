@@ -23,6 +23,7 @@ extern bool b_pkmn_has_type(u8 bank, enum PokemonType type);
 extern void do_heal(u8 bank_index, u8 percent_heal);
 extern bool bank_trapped(u8 bank);
 extern void event_switch_mid_battle(struct action* current_action);
+extern void clear_other_weather(void);
 
 /* Note: Illuminate and Honey Gather have no In-Battle effect so they are not present here*/
 
@@ -170,7 +171,13 @@ u8 oblivious_on_status(u8 user, u8 src, u16 ailment , struct anonymous_callback*
 }
 
 
-// CLOUDNINE
+// Cloud nine
+void cloud_nine_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return;
+    clear_other_weather();
+}
+
 
 // Compound Eyes
 u16 compound_eyes_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
@@ -738,7 +745,8 @@ bool white_smoke_on_stat_boost(u8 user, u8 src, u16 move, struct anonymous_callb
     return false;
 }
 
-// AIRLOCK
+// Air lock
+/* Cloud nine clone ability */
 
 // Tangled Feet
 u16 tangled_feet_on_stat(u8 user, u8 src, u16 stat_id, struct anonymous_callback* acb)
@@ -824,7 +832,37 @@ bool simple_on_stat_boost_mod(u8 user, u8 src, u16 stat_id, struct anonymous_cal
     return true;
 }
 
-// DRYSKIN
+// Dry skin
+enum TryHitMoveStatus dry_skin_try_hit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return TRYHIT_USE_MOVE_NORMAL;
+    if (!B_MOVE_HAS_TYPE(user, TYPE_WATER)) return TRYHIT_USE_MOVE_NORMAL;
+    if (TOTAL_HP(src) != B_CURRENT_HP(src)) {
+        flat_heal(src, (TOTAL_HP(src) >> 2));
+        enqueue_message(NULL, src, STRING_HEAL, 0);
+        return TRYHIT_FAIL_SILENTLY;
+    }
+    return TRYHIT_TARGET_MOVE_IMMUNITY;
+}
+
+void dry_skin_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if ((TARGET_OF(user) != src) || (user == src)) return;
+	if (B_MOVE_HAS_TYPE(user, TYPE_FIRE))
+	    B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), 125);
+}
+
+u8 dry_skin_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return true;
+    if (battle_master->field_state.is_raining || battle_master->field_state.is_primordial_sea) {
+        flat_heal(user, MAX(1, TOTAL_HP(user) >> 3));
+    } else if (battle_master->field_state.is_sunny || battle_master->field_state.is_desolate_land) {
+        flat_heal(user, MAX(1, TOTAL_HP(user) >> 3));
+    }
+    return true;
+}
+
 
 // Download
 void download_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
