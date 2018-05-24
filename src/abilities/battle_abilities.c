@@ -433,6 +433,15 @@ enum TryHitMoveStatus soundproof_on_tryhit(u8 user, u8 src, u16 move, struct ano
 }
 
 // Rain Dish
+u8 rain_dish_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user == src) return true;
+    if (battle_master->field_state.is_raining || battle_master->field_state.is_primordial_sea) {
+        flat_heal(user, MAX(1, TOTAL_HP(user) >> 4));
+    }
+    return true;
+}
+
 
 // Sand Stream
 void sandstream_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
@@ -443,7 +452,7 @@ void sandstream_on_start(u8 user, u8 src, u16 move, struct anonymous_callback* a
     set_weather(WEATHER_SANDSTORM);
 }
 
-// PRESSURE
+// Pressure
 u8 pressure_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if ((SIDE_OF(user) == SIDE_OF(src)) || (TARGET_OF(user) != src)) return true;
@@ -1092,7 +1101,7 @@ void reckless_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback
 
 // FLOWERGIFT
 
-// BADDREAMS
+// Bad Dreams
 u8 bad_dreams_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb) {
     if (user == src) return true;
     if ((B_STATUS(user) ==  AILMENT_SLEEP) || (BANK_ABILITY(user) == ABILITY_COMATOSE))
@@ -1430,7 +1439,6 @@ void prankster_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback*
 }
 
 // Sand Force
-/* TO-DO: Sandstorm Immunity */
 void sand_force_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (user != src) return;
@@ -1677,14 +1685,14 @@ void aerilate_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* 
 void dark_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     bool reverse = false;
-    for (var i = 0; i < BANK_MAX; i++) {
+    for (u8 i = 0; i < BANK_MAX; i++) {
         if (BANK_ABILITY(i) == ABILITY_AURA_BREAK) {
             reverse = true;
             break;
         }
     }
 	if (B_MOVE_HAS_TYPE(user, MTYPE_DARK)) {
-	    B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), reverse ? 75 : 130);
+	    B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), ((reverse) ? 75 : 130));
 	}
 	return;
 }
@@ -1693,7 +1701,7 @@ void dark_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callbac
 void fairy_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     bool reverse = false;
-    for (var i = 0; i < BANK_MAX; i++) {
+    for (u8 i = 0; i < BANK_MAX; i++) {
         if (BANK_ABILITY(i) == ABILITY_AURA_BREAK) {
             reverse = true;
             break;
@@ -1701,7 +1709,7 @@ void fairy_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callba
     }
 
 	if (B_MOVE_HAS_TYPE(user, MTYPE_FAIRY)) {
-	    B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), reverse ? 75 : 130);
+	    B_MOVE_POWER(user) = PERCENT(B_MOVE_POWER(user), ((reverse) ? 75 : 130));
 	}
 	return;
 }

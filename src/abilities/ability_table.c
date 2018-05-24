@@ -185,7 +185,8 @@ struct ability_data abilities[] = {
 		.on_tryhit = soundproof_on_tryhit,
 	},
 	{
-		// RAINDISH
+		// Rain Dish
+		.on_residual = rain_dish_on_residual,
 	},
 	{
 		// Sand Stream
@@ -482,7 +483,7 @@ struct ability_data abilities[] = {
 		// FLOWERGIFT
 	},
 	{
-		// BADDREAMS
+		// Bad dreams
 		.on_residual = bad_dreams_on_residual,
 	},
 	{

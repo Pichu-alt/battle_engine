@@ -226,7 +226,7 @@ extern void delta_stream_on_start(u8 user, u8 source, u16 move, struct anonymous
 extern void sheer_force_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern void fairy_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern void dark_aura_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
-
+extern u8 rain_dish_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 
 
