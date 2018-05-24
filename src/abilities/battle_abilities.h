@@ -231,5 +231,6 @@ extern void cloud_nine_on_start(u8 user, u8 src, u16 move, struct anonymous_call
 extern enum TryHitMoveStatus dry_skin_try_hit(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern void dry_skin_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 extern u8 dry_skin_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
+extern u8 hydration_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb);
 
 #endif /* BATTLE_ABILITIES_TABLE_H_ */

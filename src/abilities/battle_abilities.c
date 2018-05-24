@@ -947,7 +947,17 @@ u8 skill_link_on_modify_move(u8 user, u8 src, u16 move, struct anonymous_callbac
     return true;
 }
 
-// HYDRATION
+// Hydration
+u8 hydration_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
+{
+    if (user != src) return true;
+    if (battle_master->field_state.is_raining || battle_master->field_state.is_primordial_sea) {
+        if (B_STATUS(user) != AILMENT_NONE)
+                set_status(user, EFFECT_CURE, user);
+    }
+    return true;
+}
+
 
 // SOLARPOWER
 
@@ -1221,7 +1231,7 @@ u8 cursed_body_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* a
     return true;
 }
 
-// HEALER
+// Healer
 u8 healer_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if ((user == src) || (SIDE_OF(user) != SIDE_OF(src))) return true;
@@ -1230,7 +1240,7 @@ u8 healer_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     return true;
 }
 
-// FRIENDGUARD
+// Friend Guard
 void friend_guard_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     u8 target = TARGET_OF(user);

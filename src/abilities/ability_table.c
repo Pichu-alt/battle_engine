@@ -380,7 +380,8 @@ struct ability_data abilities[] = {
 		.on_modify_move = skill_link_on_modify_move,
 	},
 	{
-		// HYDRATION
+		// Hydration
+		.on_residual = hydration_on_residual,
 	},
 	{
 		// SOLARPOWER
