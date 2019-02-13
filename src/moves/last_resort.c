@@ -13,7 +13,7 @@ u8 last_resort_tryhit(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     u8 count = count_total_moves(user);
     if (count < 2) return false; // Must know 2 moves
     for (u8 i = 0; i < count; i++) {
-        if (p_bank[user]->b_data.moves[i] == MOVE_LAST_RESORT)
+        if (p_bank[user]->b_data.moves[i] == MOVE_LASTRESORT)
             continue;
         if (p_bank[user]->b_data.moves_used[i] == MOVE_NONE) {
             return false;

@@ -5,30 +5,30 @@
 extern void make_spinning_pokeball(s16 x, s16 y, u8 bank);
 
 
-void player_throwball_and_moveout_scene(struct Object* obj)
+void player_throwball_and_moveout_scene(struct Sprite* spr)
 {
-    switch (obj->priv[0]) {
+    switch (spr->data[0]) {
         case 0:
-            if (obj->pos1.x == -494) {
-                obj->pos1.x = -480;
-                obj->priv[0]++;
+            if (spr->pos1.x == -494) {
+                spr->pos1.x = -480;
+                spr->data[0]++;
             } else {
-                obj->pos1.x -= 2;
+                spr->pos1.x -= 2;
             }
             break;
         case 1:
             // spawn ball
-            if (obj->pos1.x == -492) {
-                obj->priv[0]++;
-                make_spinning_pokeball(53, 64, obj->priv[2]);
+            if (spr->pos1.x == -492) {
+                spr->data[0]++;
+                make_spinning_pokeball(53, 64, spr->data[2]);
             }
-            obj->pos1.x -= 2;
+            spr->pos1.x -= 2;
             break;
         case 2:
-            if (obj->pos1.x < -530) {
-                obj_free(obj);
+            if (spr->pos1.x < -530) {
+                obj_free(spr);
             } else {
-                obj->pos1.x -= 2;
+                spr->pos1.x -= 2;
             }
             break;
     };

@@ -31,7 +31,7 @@ u8 miracle_eye_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback*
 {
     if (acb->in_use) {
         acb->in_use = false;
-        enqueue_message(MOVE_MIRACLE_EYE, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_MIRACLEEYE, user, STRING_MOVE_ENDED, NULL);
         CLEAR_VOLATILE(src, VOLATILE_MIRACLE_EYE);
     }
     return true;
@@ -46,7 +46,7 @@ u8 miracle_eye_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     add_callback(CB_ON_EFFECTIVENESS, 0, 5, TARGET_OF(user), (u32)miracle_eye_on_effectiveness);
     u8 id = add_callback(CB_ON_RESIDUAL, 0, 0, TARGET_OF(user), (u32)miracle_eye_on_residual);
     CB_MASTER[id].delay_before_effect = 5;
-    enqueue_message(MOVE_MIRACLE_EYE, TARGET_OF(user), STRING_IDENTIFIED, NULL);
+    enqueue_message(MOVE_MIRACLEEYE, TARGET_OF(user), STRING_IDENTIFIED, NULL);
     return true;
 }
 
@@ -69,7 +69,7 @@ u8 odor_sleuth_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback*
 {
     if (acb->in_use) {
         acb->in_use = false;
-        enqueue_message(MOVE_ODOR_SLEUTH, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_ODORSLEUTH, user, STRING_MOVE_ENDED, NULL);
         CLEAR_VOLATILE(src, VOLATILE_ODOR_SLEUTH);
     }
     return true;
@@ -84,7 +84,7 @@ u8 odor_sleuth_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     add_callback(CB_ON_EFFECTIVENESS, 0, 5, TARGET_OF(user), (u32)odor_sleuth_on_effectiveness);
     u8 id = add_callback(CB_ON_RESIDUAL, 0, 0, TARGET_OF(user), (u32)odor_sleuth_on_residual);
     CB_MASTER[id].delay_before_effect = 5;
-    enqueue_message(MOVE_ODOR_SLEUTH, TARGET_OF(user), STRING_IDENTIFIED, NULL);
+    enqueue_message(MOVE_ODORSLEUTH, TARGET_OF(user), STRING_IDENTIFIED, NULL);
     return true;
 }
 
@@ -131,7 +131,7 @@ u8 mind_reader_on_semi_invulnerable(u8 user, u8 src, u16 move, struct anonymous_
 u8 mind_reader_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
 {
     if (user != src) return true;
-    if (LAST_MOVE(user) == MOVE_MIND_READER) return false;
+    if (LAST_MOVE(user) == MOVE_MINDREADER) return false;
     add_callback(CB_ON_BEFORE_MOVE, 0, 1, user, (u32)mind_reader_on_before_move);
     add_callback(CB_ON_TRYHIT_INV_MOVE, 0, 1, user, (u32)mind_reader_on_semi_invulnerable);
     enqueue_message(MOVE_FORESIGHT, TARGET_OF(user), STRING_IDENTIFIED, NULL);

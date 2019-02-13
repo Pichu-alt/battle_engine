@@ -41,68 +41,68 @@ bool on_faint_callbacks(u8 bank)
     return true;
 }
 
-void obj_battler_fall_through(struct Object* obj)
+void obj_battler_fall_through(struct Sprite* spr)
 {
-    obj->priv[0] += 8;
-    if ((obj->priv[0] < 40)) {
-        obj->priv[1]++;
-        obj->pos1.y += 8;
+    spr->data[0] += 8;
+    if ((spr->data[0] < 40)) {
+        spr->data[1]++;
+        spr->pos1.y += 8;
 
-        if (obj->priv[6]) {
+        if (spr->data[6]) {
             // remove a tile layer from the bottom
-            void* dst = (void*)((obj->final_oam.tile_num * 32) + 0x6010000);
-            dst += 32 * 8 * (8 - obj->priv[1]);
+            void* dst = (void*)((spr->final_oam.tile_num * 32) + 0x6010000);
+            dst += 32 * 8 * (8 - spr->data[1]);
             u32 set = 0;
-            CpuFastSet((void*)&set, (void*)dst, CPUModeFS(32 * 8 * obj->priv[1], CPUFSSET));
+            CpuFastSet((void*)&set, (void*)dst, CPUModeFS(32 * 8 * spr->data[1], CPUFSSET));
         }
     } else {
         // free the hp bars too
-        obj_free(&objects[obj->priv[2]]);
-        obj_free(&objects[obj->priv[3]]);
-        obj_free(&objects[obj->priv[4]]);
-        obj_free(&objects[obj->priv[5]]);
-        obj_free(obj);
-        super.multi_purpose_state_tracker++;
+        obj_free(&gSprites[spr->data[2]]);
+        obj_free(&gSprites[spr->data[3]]);
+        obj_free(&gSprites[spr->data[4]]);
+        obj_free(&gSprites[spr->data[5]]);
+        obj_free(spr);
+        gMain.state++;
     }
 }
 
 void do_faint()
 {
     u8 bank = CURRENT_ACTION->action_bank;
-    switch (super.multi_purpose_state_tracker) {
+    switch (gMain.state) {
         case 0:
             // terminate the task that makes the player bob up and down
             if (!SIDE_OF(bank)) {
                 task_del(task_find_id_by_functpr(set_active_movement));
-                objects[p_bank[bank]->objid].priv[6] = false;
+                gSprites[p_bank[bank]->objid].data[6] = false;
             } else {
-                objects[p_bank[bank]->objid].priv[6] = ACTIVE_BANK(0) || ACTIVE_BANK(1);
+                gSprites[p_bank[bank]->objid].data[6] = ACTIVE_BANK(0) || ACTIVE_BANK(1);
             }
             // fall through the platform animation
-            objects[p_bank[bank]->objid].callback = obj_battler_fall_through;
-            objects[p_bank[bank]->objid].priv[0] = 0;
-            objects[p_bank[bank]->objid].priv[1] = 0;
+            gSprites[p_bank[bank]->objid].callback = obj_battler_fall_through;
+            gSprites[p_bank[bank]->objid].data[0] = 0;
+            gSprites[p_bank[bank]->objid].data[1] = 0;
             for (u8 i = 0; i < 4; i++) {
-                objects[p_bank[bank]->objid].priv[2 + i] = p_bank[bank]->objid_hpbox[i];
+                gSprites[p_bank[bank]->objid].data[2 + i] = p_bank[bank]->objid_hpbox[i];
                 p_bank[bank]->objid_hpbox[i] = 0x3F;
             }
             p_bank[bank]->objid = 0x3F;
 
             enqueue_message(0, bank, STRING_FAINTED, 0);
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 1:
             // wait for callback to terminate
             break;
         case 2:
             on_faint_callbacks(bank);
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 3:
             prepend_action(bank, NULL, ActionHighPriority, EventInactive);
             end_action(CURRENT_ACTION);
-            set_callback1(battle_loop);
-            super.multi_purpose_state_tracker = 0;
+            SetMainCallback(battle_loop);
+            gMain.state = 0;
             break;
     };
 }
@@ -110,8 +110,8 @@ void do_faint()
 
 void event_faint(struct action* current_action)
 {
-    super.multi_purpose_state_tracker = 0;
-    set_callback1(do_faint);
+    gMain.state = 0;
+    SetMainCallback(do_faint);
     return;
 }
 

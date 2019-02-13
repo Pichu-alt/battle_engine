@@ -10,7 +10,7 @@ void fusion_flare_on_base_power(u8 user, u8 src, u16 move, struct anonymous_call
 {
     if (user != src) return;
     for (u8 i = 0; i < BANK_MAX; i++) {
-        if (LAST_MOVE(i) == MOVE_FUSION_BOLT) {
+        if (LAST_MOVE(i) == MOVE_FUSIONBOLT) {
             B_MOVE_POWER(user) *= 2;
             return;
         }
@@ -21,7 +21,7 @@ void fusion_bolt_on_base_power(u8 user, u8 src, u16 move, struct anonymous_callb
 {
     if (user != src) return;
     for (u8 i = 0; i < BANK_MAX; i++) {
-        if (LAST_MOVE(i) == MOVE_FUSION_FLARE) {
+        if (LAST_MOVE(i) == MOVE_FUSIONFLARE) {
             B_MOVE_POWER(user) *= 2;
             return;
         }

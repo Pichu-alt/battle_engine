@@ -17,9 +17,9 @@ extern u16 stage_modify_stat(u16 stat, s8 mod, u8 id, u8 bank);
 #define CPUFSCPY 0
 #define CPUFSSET 1
 #define CPUModeFS(size, mode) ((size >> 2) | (mode << 24))
-#define OBJID_HIDE(objid) objects[objid].final_oam.affine_mode = 2
-#define OBJID_SHOW(objid) objects[objid].final_oam.affine_mode = 0
-#define OBJID_SHOW_AFFINE(objid) objects[objid].final_oam.affine_mode = 1
+#define OBJID_HIDE(objid) gSprites[objid].final_oam.affine_mode = 2
+#define OBJID_SHOW(objid) gSprites[objid].final_oam.affine_mode = 0
+#define OBJID_SHOW_AFFINE(objid) gSprites[objid].final_oam.affine_mode = 1
 
 /* To be removed when species expansion hits */
 #define SPECIES_ASH_GRENINJA 0

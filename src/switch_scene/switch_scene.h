@@ -57,7 +57,7 @@ extern u8 load_dmg_type_icon(u8 type, s16 x, s16 y, u8 tag);
 extern u8 load_small_dmg_category_icon(u8 category, s16 x, s16 y, u8 tag);
 extern void vblank_cb_no_merge(void);
 extern void c2_switch_menu(void);
-extern void oac_nullsub(struct Object* obj);
+extern void oac_nullsub(struct Sprite* spr);
 extern const struct OamData icon_oam;
 extern const struct OamData slider_oam;
 extern const struct OamData confirm_box_oam;

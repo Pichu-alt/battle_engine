@@ -7,6 +7,8 @@
 #include "../../generated/images/battle_terrains/grass/grass_entry.h"
 #include "../battle_text/battle_textbox_gfx.h"
 
+#define SPECIES_MAX 900
+
 extern void CpuFastSet(void*, void*, u32);
 /* Standard BG configuration for battle start */
 const struct BgConfig bg_config_data[4] = {
@@ -109,7 +111,7 @@ struct Pokemon* pick_first_usable_pokemon(struct Pokemon* p, u8 party_size)
         u16 current_hp = pokemon_getattr(&p[i], REQUEST_CURRENT_HP, NULL);
 
         // valid if it's a valid species, isn't an egg, and is alive.
-        if ((species < SPECIES_MAX) && (species > SPECIES_MISSINGNO) &&
+        if ((species < SPECIES_MAX) && (species > 0) &&
          (!is_egg) && (current_hp > 0)) {
             return (&p[i]);
         }
@@ -117,7 +119,7 @@ struct Pokemon* pick_first_usable_pokemon(struct Pokemon* p, u8 party_size)
     return NULL; // failed to find an active battler. Maybe the battle should whiteout here.
 }
 
-/* Spawn battler objects. Set active banks based on battle type */
+/* Spawn battler gSprites. Set active banks based on battle type */
 extern void create_sprites_wild_battlers(void);
 void battle_scene_intialize_sprites()
 {
@@ -127,13 +129,13 @@ void battle_scene_intialize_sprites()
         case BATTLE_MODE_WILD:
             // initialize p_bank pkmn name and pointer for player
             p_bank[PLAYER_SINGLES_BANK]->this_pkmn = pick_first_usable_pokemon(&party_player[0], 6);
-            memcpy(p_bank[PLAYER_SINGLES_BANK]->b_data.name, p_bank[PLAYER_SINGLES_BANK]->this_pkmn->base.nick, sizeof(party_player[0].base.nick));
+            memcpy(p_bank[PLAYER_SINGLES_BANK]->b_data.name, p_bank[PLAYER_SINGLES_BANK]->this_pkmn->box.nick, sizeof(party_player[0].box.nick));
             p_bank[PLAYER_SINGLES_BANK]->b_data.name[11] = 0xFF;
             p_bank[PLAYER_SINGLES_BANK]->b_data.is_active_bank = true;
 
             // same for opponent
             p_bank[OPPONENT_SINGLES_BANK]->this_pkmn = pick_first_usable_pokemon(&party_opponent[0], 6);
-            memcpy(p_bank[OPPONENT_SINGLES_BANK]->b_data.name, p_bank[OPPONENT_SINGLES_BANK]->this_pkmn->base.nick, sizeof(party_player[0].base.nick));
+            memcpy(p_bank[OPPONENT_SINGLES_BANK]->b_data.name, p_bank[OPPONENT_SINGLES_BANK]->this_pkmn->box.nick, sizeof(party_player[0].box.nick));
             p_bank[OPPONENT_SINGLES_BANK]->b_data.name[11] = 0xFF;
             p_bank[OPPONENT_SINGLES_BANK]->b_data.is_active_bank = true;
             create_sprites_wild_battlers();
@@ -156,10 +158,10 @@ void battlers_move_into_scene()
         case BATTLE_MODE_WILD:
             // player
             if (bs_env_windows->player_trainer_objid != 0x3F)
-                objects[bs_env_windows->player_trainer_objid].pos1.x -= 3;
+                gSprites[bs_env_windows->player_trainer_objid].pos1.x -= 3;
             // wild mon
              if (p_bank[OPPONENT_SINGLES_BANK]->objid != 0x3F)
-                 objects[p_bank[OPPONENT_SINGLES_BANK]->objid].pos1.x += 3;
+                 gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid].pos1.x += 3;
             break;
         case BATTLE_MODE_WILD_DOUBLE:
         case BATTLE_MODE_TRAINER:
@@ -172,11 +174,11 @@ void battlers_move_into_scene()
 }
 
 
-extern void player_throwball_and_moveout_scene(struct Object*);
+extern void player_throwball_and_moveout_scene(struct Sprite*);
 void player_sendout_animation_singles()
 {
-    objects[bs_env_windows->player_trainer_objid].anim_number++;
-    objects[bs_env_windows->player_trainer_objid].callback = player_throwball_and_moveout_scene;
-    objects[bs_env_windows->player_trainer_objid].priv[2] = PLAYER_SINGLES_BANK;
+    gSprites[bs_env_windows->player_trainer_objid].animNum++;
+    gSprites[bs_env_windows->player_trainer_objid].callback = player_throwball_and_moveout_scene;
+    gSprites[bs_env_windows->player_trainer_objid].data[2] = PLAYER_SINGLES_BANK;
     bs_anim_status = 1;
 }

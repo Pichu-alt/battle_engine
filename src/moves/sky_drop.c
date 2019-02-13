@@ -12,7 +12,7 @@ u8 skydrop_opponent_before_move(u8 user, u8 src, u16 move, struct anonymous_call
 {
     if (user != src) return true;
     if (HAS_VOLATILE(user, VOLATILE_SKYDROP)) {
-        enqueue_message(CURRENT_MOVE(user), user, STRING_SKY_DROP_AIR, MOVE_SKY_DROP);
+        enqueue_message(CURRENT_MOVE(user), user, STRING_SKY_DROP_AIR, MOVE_SKYDROP);
         return 3;
     }
     return true;
@@ -35,7 +35,7 @@ u8 skydrop_before_move(u8 user, u8 src, u16 move, struct anonymous_callback* acb
     if (HAS_VOLATILE(user, VOLATILE_GRAVITY)) {
         CLEAR_VOLATILE(user, VOLATILE_SKYDROP);
         CLEAR_VOLATILE(user, VOLATILE_SEMI_INVULNERABLE);
-        enqueue_message(MOVE_SKY_DROP, user, STRING_CANT_REASON, NULL);
+        enqueue_message(MOVE_SKYDROP, user, STRING_CANT_REASON, NULL);
         return false;
     }
     // if charging move skip turn
@@ -59,7 +59,7 @@ void skydrop_on_damage(u8 user, u8 src, u16 move, struct anonymous_callback* acb
 {
     if (user != src) return;
     CLEAR_VOLATILE(TARGET_OF(user), VOLATILE_SKYDROP);
-    enqueue_message(MOVE_SKY_DROP, TARGET_OF(user), STRING_SKY_DROP_FREE, NULL);
+    enqueue_message(MOVE_SKYDROP, TARGET_OF(user), STRING_SKY_DROP_FREE, NULL);
 }
 
 //attacker took defender to the sky!

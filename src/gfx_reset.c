@@ -35,7 +35,7 @@ void vblank_cb_merge_tbox_sliding()
         if (!*(dst + i))
             *(dst + i) = *(src + i);
 	}
-    if (super.multi_purpose_state_tracker == 7) {
+    if (gMain.state == 7) {
         bs_env_windows->bot_side -= 3;
         bs_env_windows->top_side += 3;
         bs_env_windows->wintop -= 1;
@@ -73,31 +73,31 @@ void vblank_cb_no_merge()
 void c2_battle()
 {
     obj_sync_superstate();
-    objc_exec();
+    AnimateSprites();
     process_palfade();
-    task_exec();
+    RunTasks();
     // merge textbox and text tile maps
-    remoboxes_upload_tilesets();
+    RunTextPrinters();
 }
 
 void c2_switch_menu()
 {
     obj_sync_superstate();
-    objc_exec();
+    AnimateSprites();
     process_palfade();
-    task_exec();
+    RunTasks();
     tilemaps_sync();
     // merge textbox and text tile maps
-    remoboxes_upload_tilesets();
+    RunTextPrinters();
 }
 
 
 void handlers_clear()
 {
-    vblank_handler_set(0);
-    hblank_handler_set(0);
-    set_callback1(0);
-    set_callback2(0);
+    SetVBlankCallback(0);
+    SetHBlankCallback(0);
+    SetMainCallback(0);
+    SetMainCallback2(0);
 }
 
 
@@ -122,10 +122,10 @@ void reset_bg_settings()
     bgid_mod_y_offset(2, 0, 0);
     bgid_mod_x_offset(3, 0, 0);
     bgid_mod_y_offset(3, 0, 0);
-    gpu_sync_bg_hide(0);
-    gpu_sync_bg_hide(1);
-    gpu_sync_bg_hide(2);
-    gpu_sync_bg_hide(3);
+    HideBg(0);
+    HideBg(1);
+    HideBg(2);
+    HideBg(3);
 }
 
 void reset_boxes()
@@ -144,13 +144,13 @@ void setup()
     // pals
     reset_pal_settings();
     // objs
-    obj_and_aux_reset_all();
+    ResetSpriteData();
     gpu_tile_obj_tags_reset();
     // VRAM clear
     u32 set = 0;
     CpuFastSet((void*)&set, (void*)ADDR_VRAM, CPUModeFS(0x10000, CPUFSSET));
     // tasks
     malloc_init((void*)0x2000000, 0x1C000);
-    tasks_init();
+    ResetTasks();
     // textboxes
 }

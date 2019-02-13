@@ -15,7 +15,7 @@ void update_pbank(u8 bank, struct update_flags* flags)
 {
     // base stats
     u16 species = pokemon_getattr(p_bank[bank]->this_pkmn, REQUEST_SPECIES, NULL);
-    memcpy(p_bank[bank]->b_data.name, p_bank[bank]->this_pkmn->base.nick, sizeof(party_player[0].base.nick));
+    memcpy(p_bank[bank]->b_data.name, p_bank[bank]->this_pkmn->box.nick, sizeof(party_player[0].box.nick));
     p_bank[bank]->b_data.name[11] = 0xFF;
     p_bank[bank]->b_data.is_active_bank = true;
 

@@ -77,16 +77,16 @@ enum TryHitMoveStatus nature_power_on_tryhit(u8 user, u8 src, u16 move, struct a
     if (battle_master->field_state.is_electric_terrain) {
         CURRENT_MOVE(user) = MOVE_THUNDERBOLT;
     } else if (battle_master->field_state.is_grassy_terrain) {
-        CURRENT_MOVE(user) = MOVE_ENERGY_BALL;
+        CURRENT_MOVE(user) = MOVE_ENERGYBALL;
     } else if (battle_master->field_state.is_misty_terrain) {
         CURRENT_MOVE(user) = MOVE_MOONBLAST;
     } else if (battle_master->field_state.is_psychic_terrain) {
         CURRENT_MOVE(user) = MOVE_PSYCHIC;
     } else {
-        CURRENT_MOVE(user) = MOVE_TRI_ATTACK;
+        CURRENT_MOVE(user) = MOVE_TRIATTACK;
     }
     set_attack_bm_inplace(user, (user), MOVE_PRIORITY(CURRENT_MOVE(user)));
-    LAST_MOVE(user) = MOVE_NATURE_POWER;
+    LAST_MOVE(user) = MOVE_NATUREPOWER;
     enqueue_message(CURRENT_MOVE(user), user, STRING_ATTACK_USED, 0);
     return TRYHIT_USE_MOVE_NORMAL;
 }

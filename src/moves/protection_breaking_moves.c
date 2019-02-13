@@ -19,7 +19,7 @@ u8 hyperspace_hole_before_move(u8 user, u8 src, u16 move, struct anonymous_callb
 {
     if (user != src) return true;
     if (break_protection(TARGET_OF(src))) {
-        enqueue_message(MOVE_HYPERSPACE_HOLE, src, STRING_BROKE_PROTECT, 0);
+        enqueue_message(MOVE_HYPERSPACEHOLE, src, STRING_BROKE_PROTECT, 0);
     }
     return true;
 }

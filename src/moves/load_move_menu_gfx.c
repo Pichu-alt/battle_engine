@@ -64,7 +64,7 @@ const struct OamData text_oam = {
 static const struct Frame (**nullframe)[] = (const struct Frame (**)[])0x8231CF0;
 static const struct RotscaleFrame (**nullrsf)[] = (const struct RotscaleFrame (**)[])0x8231CFC;
 
-extern void oac_nullsub(struct Object*);
+extern void oac_nullsub(struct Sprite*);
 
 const u16 pal_font[16] = {0x532E, 0x7FFF, 0x318C, 0x675A, 0x037D, 0x47DF, 0x025F, 0x47DF, 0x001D, 0x025F, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
 };
@@ -92,9 +92,9 @@ u8 font_color_set(u8 i)
 u8 load_dmg_type_icon(u8 type, s16 x, s16 y, u8 tag)
 {
     struct SpritePalette icon_pal = {(void*)type_iconsPal, 0x750};
-    struct SpriteTiles icon_gfx = {(void*)(type_iconsTiles + (type * 256)), 256, 0x750 + tag};
+    struct CompressedSpriteSheet icon_gfx = {(void*)(type_iconsTiles + (type * 256)), 256, 0x750 + tag};
     struct Template icon_temp = {0x750 + tag, 0x750, &type_icon_oam, nullframe, &icon_gfx, nullrsf,
-                                (ObjectCallback)oac_nullsub};
+                                (SpriteCallback)oac_nullsub};
     gpu_tile_obj_alloc_tag_and_upload(&icon_gfx);
     gpu_pal_obj_alloc_tag_and_apply(&icon_pal);
     return template_instanciate_forward_search(&icon_temp, x, y, 0);
@@ -103,9 +103,9 @@ u8 load_dmg_type_icon(u8 type, s16 x, s16 y, u8 tag)
 u8 load_dmg_category_icon(u8 category, s16 x, s16 y, u8 tag)
 {
     struct SpritePalette icon_pal = {(void*)PSS_iconsPal, MOVE_PSS_TAG};
-    struct SpriteTiles icon_gfx = {(void*)(PSS_iconsTiles + (category * 128)), 256, MOVE_PSS_TAG + tag};
+    struct CompressedSpriteSheet icon_gfx = {(void*)(PSS_iconsTiles + (category * 128)), 256, MOVE_PSS_TAG + tag};
     struct Template icon_temp = {MOVE_PSS_TAG + tag, MOVE_PSS_TAG, &pp_icon_oam, nullframe, &icon_gfx, nullrsf,
-                                (ObjectCallback)oac_nullsub};
+                                (SpriteCallback)oac_nullsub};
     gpu_tile_obj_alloc_tag_and_upload(&icon_gfx);
     gpu_pal_obj_alloc_tag_and_apply(&icon_pal);
     return template_instanciate_forward_search(&icon_temp, x, y, 0);
@@ -114,9 +114,9 @@ u8 load_dmg_category_icon(u8 category, s16 x, s16 y, u8 tag)
 u8 load_small_dmg_category_icon(u8 category, s16 x, s16 y, u8 tag)
 {
     struct SpritePalette icon_pal = {(void*)PSS_icons1Pal, MOVE_PSS_TAG};
-    struct SpriteTiles icon_gfx = {(void*)(PSS_icons1Tiles + (category * 128)), 256, MOVE_PSS_TAG + tag};
+    struct CompressedSpriteSheet icon_gfx = {(void*)(PSS_icons1Tiles + (category * 128)), 256, MOVE_PSS_TAG + tag};
     struct Template icon_temp = {MOVE_PSS_TAG + tag, MOVE_PSS_TAG, &pp_icon_oam, nullframe, &icon_gfx, nullrsf,
-                                (ObjectCallback)oac_nullsub};
+                                (SpriteCallback)oac_nullsub};
     gpu_tile_obj_alloc_tag_and_upload(&icon_gfx);
     gpu_pal_obj_alloc_tag_and_apply(&icon_pal);
     return template_instanciate_forward_search(&icon_temp, x, y, 0);
@@ -147,8 +147,8 @@ u8 draw_pp(u8 bank, u8 index)
 
     /* Make canvas object */
     struct SpritePalette text_pal = {(void*)pal_font, MOVE_PP_TAG};
-    struct SpriteTiles text_gfx = {(void*)empty_barTiles, 1024, MOVE_PP_TAG + index};
-    struct Template text_temp = {MOVE_PP_TAG + index, MOVE_PP_TAG, &text_oam, nullframe, &text_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet text_gfx = {(void*)empty_barTiles, 1024, MOVE_PP_TAG + index};
+    struct Template text_temp = {MOVE_PP_TAG + index, MOVE_PP_TAG, &text_oam, nullframe, &text_gfx, nullrsf, (SpriteCallback)oac_nullsub};
     gpu_tile_obj_decompress_alloc_tag_and_upload(&text_gfx);
     p_bank[PLAYER_SINGLES_BANK]->pp_pal = gpu_pal_obj_alloc_tag_and_apply(&text_pal);
 
@@ -158,19 +158,19 @@ u8 draw_pp(u8 bank, u8 index)
      switch (index) {
         case 0:
             objid = template_instanciate_forward_search(&text_temp, 110, 131, 0);
-            vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+            vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
             break;
         case 1:
             objid = template_instanciate_forward_search(&text_temp, 212, 131, 0);
-            vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+            vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
             break;
         case 2:
             objid = template_instanciate_forward_search(&text_temp, 110, 150, 0);
-            vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+            vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
             break;
         default:
             objid = template_instanciate_forward_search(&text_temp, 212, 150, 0);
-            vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+            vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
             break;
     };
     draw_text_obj(0, 0, 4, string_buffer, vram_addr, 0);
@@ -192,8 +192,8 @@ void load_names_moves(u8 bank)
 
         /* Make canvas object */
         struct SpritePalette text_pal = {(void*)pal_font, MOVE_NAMES_TAG};
-        struct SpriteTiles text_gfx = {(void*)empty_barTiles, 1024, MOVE_NAMES_TAG + i};
-        struct Template text_temp = {MOVE_NAMES_TAG + i, MOVE_NAMES_TAG, &text_oam, nullframe, &text_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+        struct CompressedSpriteSheet text_gfx = {(void*)empty_barTiles, 1024, MOVE_NAMES_TAG + i};
+        struct Template text_temp = {MOVE_NAMES_TAG + i, MOVE_NAMES_TAG, &text_oam, nullframe, &text_gfx, nullrsf, (SpriteCallback)oac_nullsub};
         gpu_tile_obj_decompress_alloc_tag_and_upload(&text_gfx);
         p_bank[PLAYER_SINGLES_BANK]->move_pal = gpu_pal_obj_alloc_tag_and_apply(&text_pal);
 
@@ -203,19 +203,19 @@ void load_names_moves(u8 bank)
         switch (i) {
             case 0:
                 objid = template_instanciate_forward_search(&text_temp, 43, 131, 0);
-                vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+                vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
                 break;
             case 1:
                 objid = template_instanciate_forward_search(&text_temp, 145, 131, 0);
-                vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+                vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
                 break;
             case 2:
                 objid = template_instanciate_forward_search(&text_temp, 43, 150, 0);
-                vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+                vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
                 break;
             default:
                 objid = template_instanciate_forward_search(&text_temp, 145, 150, 0);
-                vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + 0x6010000);
+                vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x6010000);
                 break;
         };
         draw_text_obj(0, 0, 3, string_buffer, vram_addr, 0);
@@ -244,11 +244,11 @@ void load_icons_moves(u8 bank)
             u8 objid;
             battle_master->type_objid[i] = load_dmg_type_icon(type, x, y, i);
             objid = draw_pp(bank, i);
-            objects[objid].final_oam.affine_mode = 2;
+            gSprites[objid].final_oam.affine_mode = 2;
             battle_master->move_pp_objid[i] = objid;
             objid = load_dmg_category_icon(MOVE_CATEGORY(p_moves[i]), x + 8, y, i);
             battle_master->move_pss_objid[i] = objid;
-            objects[objid].final_oam.affine_mode = 2;
+            gSprites[objid].final_oam.affine_mode = 2;
         }
     }
     load_names_moves(bank);

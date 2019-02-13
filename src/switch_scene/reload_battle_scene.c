@@ -21,34 +21,34 @@ extern void set_active_movement(u8 tid);
 
 void return_to_battle()
 {
-    switch(super.multi_purpose_state_tracker) {
+    switch(gMain.state) {
         case 0:
-            if (!pal_fade_control.active) {
+            if (!gPaletteFade.active) {
                 u32 set = 0;
                 CpuFastSet((void*)&set, (void*)ADDR_VRAM, CPUModeFS(0x10000, CPUFSSET));
-                vblank_handler_set((SuperCallback)vblank_cb_merge_tbox);
-                set_callback2((SuperCallback)c2_battle);
+                SetVBlankCallback((MainCallback)vblank_cb_merge_tbox);
+                SetMainCallback2((MainCallback)c2_battle);
                 bg_vram_setup(0, (struct BgConfig *)&bg_config_data, 4);
                 rbox_init_from_templates((struct TextboxTemplate*)0x8248330);
                 if (battle_master->switch_main.reason == ViewPokemon)
                     pick_and_load_battle_bgs_no_entry(battle_textbox_action_selectMap);
                 else
                     pick_and_load_battle_bgs_no_entry(battle_textboxMap);
-                super.multi_purpose_state_tracker++;
+                gMain.state++;
             }
             break;
         case 1:
-            fade_screen(0xFFFFFFFF, 0, 16, 0, 0x0000);
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, 0x0000);
             // show bgs for background and entry image
-            gpu_sync_bg_show(3);
-            gpu_sync_bg_show(0);
+            ShowBg(3);
+            ShowBg(0);
             // show oams
             for (u8 i = 0; i < BANK_MAX; i++) {
                 // show pokemon OAMs
                 if (p_bank[i]->objid < 0x3F) {
                     OBJID_SHOW(p_bank[i]->objid);
-                    objects[p_bank[i]->objid].final_oam.h_flip = false;
-                    objects[p_bank[i]->objid].final_oam.v_flip = false;
+                    gSprites[p_bank[i]->objid].final_oam.h_flip = false;
+                    gSprites[p_bank[i]->objid].final_oam.v_flip = false;
                 }
                 // show HP box OAMs
                 for (u8 j = 0; j < 4; j++) {
@@ -56,11 +56,11 @@ void return_to_battle()
                         OBJID_SHOW(p_bank[i]->objid_hpbox[j]);
                 }
             }
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 2:
-            if (pal_fade_control.active) return;
-            super.multi_purpose_state_tracker++;
+            if (gPaletteFade.active) return;
+            gMain.state++;
         case 3:
             switch (battle_master->switch_main.reason) {
                 case ViewPokemon:
@@ -71,26 +71,26 @@ void return_to_battle()
                     tasks[task_add(set_active_movement, 1)].priv[0] = battle_master->option_selecting_bank;
                     p_bank[PLAYER_SINGLES_BANK]->b_data.is_switching = true;
                     p_bank[PLAYER_SINGLES_BANK]->this_pkmn = &party_player[battle_master->switch_main.position];
-                    super.multi_purpose_state_tracker = 0;
+                    gMain.state = 0;
                     validate_player_selected_move();
                     end_action(CURRENT_ACTION);
-                    set_callback1(battle_loop);
+                    SetMainCallback(battle_loop);
                     return;
                 case ForcedSwitch:
                     p_bank[PLAYER_SINGLES_BANK]->this_pkmn = &party_player[battle_master->switch_main.position];
-                    super.multi_purpose_state_tracker = 0;
+                    gMain.state = 0;
                     p_bank[PLAYER_SINGLES_BANK]->b_data.is_switching = false;
-                    set_callback1(battle_loop);
+                    SetMainCallback(battle_loop);
                     return;
                 case PokemonFainted:
                     p_bank[PLAYER_SINGLES_BANK]->this_pkmn = &party_player[battle_master->switch_main.position];
-                    super.multi_purpose_state_tracker = 0;
+                    gMain.state = 0;
                     CURRENT_ACTION->event_state++;
-                    set_callback1(battle_loop);
+                    SetMainCallback(battle_loop);
                     return;
             };
             dprintf("INVALID SWITCH REASON WAS GIVEN\n");
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 4:
             break;
@@ -104,7 +104,7 @@ extern u8 spawn_hpbox_opponent(u16 tag, s16 x, s16 y, u8 bank);
 extern u8 spawn_hpbox_player(u16 tag, s16 x, s16 y, u8 bank);
 void return_to_battle_bag()
 {
-    switch (super.multi_purpose_state_tracker) {
+    switch (gMain.state) {
         case 0:
             // display
             lcd_io_set(0x4C, 0);
@@ -114,9 +114,9 @@ void return_to_battle_bag()
 
             // callbacks
             handlers_clear();
-            set_callback1(return_to_battle_bag);
-            set_callback2((SuperCallback)c2_battle);
-            vblank_handler_set((SuperCallback)vblank_cb_merge_tbox);
+            SetMainCallback(return_to_battle_bag);
+            SetMainCallback2((MainCallback)c2_battle);
+            SetVBlankCallback((MainCallback)vblank_cb_merge_tbox);
 
             // BG stuff
             u32 set = 0;
@@ -126,44 +126,44 @@ void return_to_battle_bag()
             bg_vram_setup(0, (struct BgConfig *)&bg_config_data, 4);
             // BGs
             pick_and_load_battle_bgs_no_entry(battle_textbox_action_selectMap);
-            gpu_sync_bg_hide(0);
-            gpu_sync_bg_hide(1);
-            gpu_sync_bg_hide(2);
-            gpu_sync_bg_hide(3);
+            HideBg(0);
+            HideBg(1);
+            HideBg(2);
+            HideBg(3);
             // bag clear something
             u8* bag_something = (u8*)0x2023FE5;
             u8* bag_something2 = (u8*)0x2023FE6;
             *bag_something = 0;
             *bag_something2 = 0;
             dp12_8087EA4();
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 1:
             {
             // objs
             for (u8 i = 0; i < 0x3F; i++) {
-                obj_free(&objects[i]);
+                obj_free(&gSprites[i]);
             }
-            obj_and_aux_reset_all();
+            ResetSpriteData();
             gpu_tile_obj_tags_reset();
-            // need to redraw objects
+            // need to redraw gSprites
             create_sprites_battle_mons_wild();
-            objects[p_bank[OPPONENT_SINGLES_BANK]->objid].pos1.x = 178;
+            gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid].pos1.x = 178;
             // spawn the HP boxes
             spawn_hpbox_opponent(HPBOX_TAG_OPP_SW, HPBOX_OPP_SW_X, HPBOX_OPP_SW_Y, OPPONENT_SINGLES_BANK);
             spawn_hpbox_player(HPBOX_TAG_PLAYER_SINGLE, HPBOX_PLAYER_SINGLE_X, HPBOX_PLAYER_SINGLE_Y, PLAYER_SINGLES_BANK);
-            gpu_sync_bg_show(0);
-            gpu_sync_bg_show(3);
-            fade_screen(0xFFFFFFFF, 0, 16, 0, 0x0000);
-            super.multi_purpose_state_tracker++;
+            ShowBg(0);
+            ShowBg(3);
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, 0x0000);
+            gMain.state++;
             }
             break;
         case 2:
-            if (!pal_fade_control.active) {
+            if (!gPaletteFade.active) {
                 // continue game callbacks
                 // init textbox
                 rbox_init_from_templates((struct TextboxTemplate*)0x8248330);
-                super.multi_purpose_state_tracker++;
+                gMain.state++;
             }
             break;
         default:

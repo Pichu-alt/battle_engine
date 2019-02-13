@@ -16,35 +16,35 @@ extern void battle_loop(void);
 
 void apply_damage()
 {
-    switch (super.multi_purpose_state_tracker) {
+    switch (gMain.state) {
         case 0:
         {
             s16 delta = B_CURRENT_HP(CURRENT_ACTION->priv[0]) - CURRENT_ACTION->priv[1];
             delta = MAX(delta, 0);
             // HP bar damage animation
             hp_anim_change(CURRENT_ACTION->priv[0], delta);
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         }
         case 1:
             if (task_is_running(hpbar_apply_dmg))
                 return;
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         default:
             if (B_CURRENT_HP(CURRENT_ACTION->priv[0]) < 1) {
                 B_FAINTED(CURRENT_ACTION->priv[0]) = true;
             }
             end_action(CURRENT_ACTION);
-            set_callback1(battle_loop);
+            SetMainCallback(battle_loop);
             break;
         };
 }
 
 void init_damage(struct action* a)
 {
-    super.multi_purpose_state_tracker = 0;
-    set_callback1(apply_damage);
+    gMain.state = 0;
+    SetMainCallback(apply_damage);
     return;
 }
 

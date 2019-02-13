@@ -13,9 +13,9 @@ extern bool moves_last(u8 bank);
 
 const static u8 chances_protect[] = {100, 33, 3, 1};
 const static u16 protection_moves[] = {
-    MOVE_BANEFUL_BUNKER, MOVE_DETECT, MOVE_ENDURE,
-    MOVE_KINGS_SHIELD, MOVE_PROTECT, MOVE_QUICK_GUARD,
-    MOVE_SPIKY_SHIELD, MOVE_WIDE_GUARD};
+    MOVE_BANEFULBUNKER, MOVE_DETECT, MOVE_ENDURE,
+    MOVE_KINGSSHIELD, MOVE_PROTECT, MOVE_QUICKGUARD,
+    MOVE_SPIKYSHIELD, MOVE_WIDEGUARD};
 
 bool is_protection_move(u16 move)
 {
@@ -65,10 +65,10 @@ u8 protect_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     enqueue_message(0, src, STRING_PROTECTED_SELF, 0);
     if ((CURRENT_MOVE(user) == MOVE_PROTECT) || (CURRENT_MOVE(user) == MOVE_DETECT)) {
         add_callback(CB_ON_TRYHIT_MOVE, 4, 0, user, (u32)(protect_on_tryhit_anon));
-    } else if ((CURRENT_MOVE(user) == MOVE_SPIKY_SHIELD)) {
+    } else if ((CURRENT_MOVE(user) == MOVE_SPIKYSHIELD)) {
         extern u8 spiky_shield_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
         add_callback(CB_ON_TRYHIT_MOVE, 4, 0, user, (u32)spiky_shield_on_tryhit_anon);
-    } else if ((CURRENT_MOVE(user) == MOVE_BANEFUL_BUNKER)) {
+    } else if ((CURRENT_MOVE(user) == MOVE_BANEFULBUNKER)) {
         extern u8 baneful_bunker_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_callback* acb);
         add_callback(CB_ON_TRYHIT_MOVE, 4, 0, user, (u32)baneful_bunker_on_tryhit_anon);
     } else {
@@ -87,7 +87,7 @@ u8 spiky_shield_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_ca
         enqueue_message(0, TARGET_OF(user), STRING_PROTECTED_SELF, 0);
         if(IS_CONTACT(move)) {
             if(do_damage_residual(user, TOTAL_HP(TARGET_OF(user)) / 8, NULL))
-                enqueue_message(MOVE_SPIKY_SHIELD, user, STRING_RESIDUAL_DMG, MOVE_SPIKY_SHIELD);
+                enqueue_message(MOVE_SPIKYSHIELD, user, STRING_RESIDUAL_DMG, MOVE_SPIKYSHIELD);
         }
         return 3; // fail the move silently
     }
@@ -150,7 +150,7 @@ u8 mat_block_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb
     // fail if user is last to move
     if (moves_last(src)) return false;
     if (protection_effect_exists_side(src, (u32)mat_block_on_tryhit_anon)) return false;
-    enqueue_message(MOVE_MAT_BLOCK, src, STRING_PROTECTED_TEAM, 0);
+    enqueue_message(MOVE_MATBLOCK, src, STRING_PROTECTED_TEAM, 0);
     add_callback(CB_ON_TRYHIT_MOVE, 3, 0, user, (u32)mat_block_on_tryhit_anon);
     return true;
 }
@@ -161,7 +161,7 @@ u8 wide_guard_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_call
 {
     if (SIDE_OF(TARGET_OF(user)) != SIDE_OF(source)) return true;
     if (IS_PROTECTABLE(move) && M_HITS_FOE_SIDE(move)) {
-        enqueue_message(MOVE_WIDE_GUARD, TARGET_OF(user), STRING_PROTECTED_MON, 0);
+        enqueue_message(MOVE_WIDEGUARD, TARGET_OF(user), STRING_PROTECTED_MON, 0);
         return 3; // fail the move silently
     }
     return true;
@@ -172,7 +172,7 @@ u8 wide_guard_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* ac
     // msg: X protected itself
     // queue an anon func to read and interrupt
     if (user != src) return true;
-    enqueue_message(MOVE_WIDE_GUARD, src, STRING_PROTECTED_TEAM, 0);
+    enqueue_message(MOVE_WIDEGUARD, src, STRING_PROTECTED_TEAM, 0);
     add_callback(CB_ON_TRYHIT_MOVE, 3, 0, user, (u32)wide_guard_on_tryhit_anon);
     return true;
 }
@@ -182,7 +182,7 @@ u8 quick_guard_on_tryhit_anon(u8 user, u8 src, u16 move, struct anonymous_callba
 {
     if (SIDE_OF(user) == SIDE_OF(src)) return true;
     if ((B_MOVE_PRIORITY(user) > 0) && (SIDE_OF(TARGET_OF(user)) == SIDE_OF(src))) {
-        enqueue_message(MOVE_QUICK_GUARD, TARGET_OF(user), STRING_PROTECTED_MON, 0);
+        enqueue_message(MOVE_QUICKGUARD, TARGET_OF(user), STRING_PROTECTED_MON, 0);
         return 3; // fail the move silently
     }
     return true;
@@ -193,7 +193,7 @@ u8 quick_guard_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* a
     // msg: X protected itself
     // queue an anon func to read and interrupt
     if (user != src) return true;
-    enqueue_message(MOVE_QUICK_GUARD, src, STRING_PROTECTED_TEAM, 0);
+    enqueue_message(MOVE_QUICKGUARD, src, STRING_PROTECTED_TEAM, 0);
     add_callback(CB_ON_TRYHIT_MOVE, 3, 0, user, (u32)quick_guard_on_tryhit_anon);
     return true;
 }
@@ -203,7 +203,7 @@ u8 crafty_shield_on_tryhit_anon(u8 user, u8 source, u16 move, struct anonymous_c
 {
     if (SIDE_OF(TARGET_OF(user)) != SIDE_OF(source)) return true;
     if (B_MOVE_IS_STATUS(user)) {
-        enqueue_message(MOVE_CRAFTY_SHIELD, TARGET_OF(user), STRING_PROTECTED_MON, 0);
+        enqueue_message(MOVE_CRAFTYSHIELD, TARGET_OF(user), STRING_PROTECTED_MON, 0);
         return 3; // fail the move silently
     }
     return true;
@@ -221,7 +221,7 @@ u8 crafty_shield_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback*
     // msg: X protected itself
     // queue an anon func to read and interrupt
     if (user != src) return true;
-    enqueue_message(MOVE_CRAFTY_SHIELD, src, STRING_PROTECTED_TEAM, 0);
+    enqueue_message(MOVE_CRAFTYSHIELD, src, STRING_PROTECTED_TEAM, 0);
     add_callback(CB_ON_TRYHIT_MOVE, 3, 0, user, (u32)crafty_shield_on_tryhit_anon);
     return true;
 }

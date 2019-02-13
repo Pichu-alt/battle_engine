@@ -141,7 +141,7 @@ u16 lucky_chant_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback
 {
     if (SIDE_OF(user) != SIDE_OF(src)) return true;
     if (acb->duration == 0) {
-        enqueue_message(MOVE_LUCKY_CHANT, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_LUCKYCHANT, user, STRING_MOVE_ENDED, NULL);
         acb->in_use = false;
     }
     return true;
@@ -161,7 +161,7 @@ u8 lucky_chant_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* a
 
     add_callback(CB_ON_RESIDUAL, 0, 5, src, (u32)lucky_chant_on_residual);
     add_callback(CB_ON_MODIFY_MOVE, -100, 5, src, (u32)lucky_chant_on_modify_move);
-    enqueue_message(MOVE_LUCKY_CHANT, user, STRING_SHIELDED_CRITS, NULL);
+    enqueue_message(MOVE_LUCKYCHANT, user, STRING_SHIELDED_CRITS, NULL);
     return true;
 }
 
@@ -221,7 +221,7 @@ u8 gravity_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
             CLEAR_VOLATILE(i, VOLATILE_SKYDROP);
             CLEAR_VOLATILE(i, VOLATILE_SEMI_INVULNERABLE);
             CLEAR_VOLATILE(i, VOLATILE_CHARGING);
-            enqueue_message(MOVE_SKY_DROP, i, STRING_FAILED_EXECUTION, MOVE_GRAVITY);
+            enqueue_message(MOVE_SKYDROP, i, STRING_FAILED_EXECUTION, MOVE_GRAVITY);
         }
 
         // remove effects of Telekinesis and Magnet rise

@@ -17,28 +17,28 @@ static const struct RotscaleFrame shrink_grow[] = {
 static const struct RotscaleFrame* shrink_grow_ptr[] = {shrink_grow};
 
 
-void pkmn_sendingout_objc(struct Object* obj)
+void pkmn_sendingout_objc(struct Sprite* spr)
 {
-    /* Send out objects grow from bottom up */
-    if (obj->priv[5] < obj->pos1.y) {
-        if ((obj->pos1.y - 6) < obj->priv[5]) {
-            obj->pos1.y = obj->priv[5];
+    /* Send out gSprites grow from bottom up */
+    if (spr->data[5] < spr->pos1.y) {
+        if ((spr->pos1.y - 6) < spr->data[5]) {
+            spr->pos1.y = spr->data[5];
         } else {
-            obj->pos1.y -= 6;
+            spr->pos1.y -= 6;
         }
     }
-   obj->priv[2]++;
-    if (obj->priv[2] % obj->priv[1])
+   spr->data[2]++;
+    if (spr->data[2] % spr->data[1])
         return;
-    if (!obj->priv[0]) {
+    if (!spr->data[0]) {
         REG_BLDCNT = 0;
-        obj->callback = oac_nullsub;
-        obj->final_oam.affine_mode = 1;
+        spr->callback = oac_nullsub;
+        spr->final_oam.affine_mode = 1;
         bs_anim_status = 0;
         return;
     }
-    REG_BLDY = obj->priv[0];
-    obj->priv[0]--;
+    REG_BLDY = spr->data[0];
+    spr->data[0]--;
 }
 
 u8 send_out_backsprite(u8 bank)
@@ -46,19 +46,19 @@ u8 send_out_backsprite(u8 bank)
     // send out pokemon's backsprite based on bank
     affine_reset_all();
     u8 objid = spawn_pkmn_backsprite_obj_slot(bank, 0x810);
-    objects[objid].rotscale_table = shrink_grow_ptr;
-    objects[objid].final_oam.affine_mode = 1;
-    objects[objid].callback = pkmn_sendingout_objc;
-    objects[objid].priv[0] = 10;
-    objects[objid].priv[1] = 3; // delay
-    objects[objid].priv[5] = objects[objid].pos1.y;
-    objects[objid].pos1.y += 64;
+    gSprites[objid].rotscale_table = shrink_grow_ptr;
+    gSprites[objid].final_oam.affine_mode = 1;
+    gSprites[objid].callback = pkmn_sendingout_objc;
+    gSprites[objid].data[0] = 10;
+    gSprites[objid].data[1] = 3; // delay
+    gSprites[objid].data[5] = gSprites[objid].pos1.y;
+    gSprites[objid].pos1.y += 64;
     p_bank[0]->objid = objid;
-    u8 pal_slot = objects[objid].final_oam.palette_num;
+    u8 pal_slot = gSprites[objid].final_oam.palette_num;
     u32 pal_fade = ((1 << (pal_slot + 16)));
 
     // flash white for 4 frames
-    fade_screen(pal_fade , 10, 0x10, 0x0, 0x7ADF);
+    BeginNormalPaletteFade(pal_fade , 10, 0x10, 0x0, 0x7ADF);
     REG_BLDCNT = (BLDCNT_BG1_SRC | BLDCNT_BG2_SRC | BLDCNT_BG3_SRC | BLDCNT_LIGHTEN | BLDCNT_BG1_DST | BLDCNT_BG2_DST | BLDCNT_BG3_DST);
     return objid;
 }
@@ -71,31 +71,31 @@ static const struct RotscaleFrame spin[] = {
     {0x7FFF, 0x0, 0x0, 0x0, 0x0} // end
 };
 static const struct RotscaleFrame (*spin_ptr)[] = (const struct RotscaleFrame(*)[])&spin;
-void pokeball_player_throw_arc(struct Object* obj)
+void pokeball_player_throw_arc(struct Sprite* spr)
 {
-    if (obj->priv[6] < 170) {
-        if (obj->priv[6] < 80) {
-            obj->priv[6] += 2;
-            if (obj->priv[6] % 3)
-                obj->pos1.x += 1;
-            obj->pos1.y = (get_pingpong(obj->priv[6], -30)) + 100;
-        } else if (obj->priv[6] < 130) {
-            obj->priv[6] += 3;
-            if (obj->priv[6] % 2)
-                obj->pos1.x += 1;
-            obj->pos1.y = (get_pingpong(obj->priv[6], -30)) + 100;
+    if (spr->data[6] < 170) {
+        if (spr->data[6] < 80) {
+            spr->data[6] += 2;
+            if (spr->data[6] % 3)
+                spr->pos1.x += 1;
+            spr->pos1.y = (get_pingpong(spr->data[6], -30)) + 100;
+        } else if (spr->data[6] < 130) {
+            spr->data[6] += 3;
+            if (spr->data[6] % 2)
+                spr->pos1.x += 1;
+            spr->pos1.y = (get_pingpong(spr->data[6], -30)) + 100;
         } else {
-            if (obj->priv[6] % 2)
-                obj->pos1.x += 1;
-            obj->priv[6] += 5;
-            obj->pos1.y = (get_pingpong(obj->priv[6], -30)) + 100;
+            if (spr->data[6] % 2)
+                spr->pos1.x += 1;
+            spr->data[6] += 5;
+            spr->pos1.y = (get_pingpong(spr->data[6], -30)) + 100;
 
         }
 
     } else {
-        obj->final_oam.affine_mode = 0;
-        send_out_backsprite(obj->priv[0]);
-        obj_free(obj);
+        spr->final_oam.affine_mode = 0;
+        send_out_backsprite(spr->data[0]);
+        obj_free(spr);
     }
 
 }
@@ -110,10 +110,10 @@ void make_spinning_pokeball(s16 x, s16 y, u8 bank)
     gpu_tile_obj_decompress_alloc_tag_and_upload(&ball_tiles[ball_id]);
     gpu_pal_decompress_alloc_tag_and_upload(&ball_palettes[ball_id]);
     u8 objid = template_instanciate_forward_search((struct Template*)0x82606F4, x, y, 0);
-    objects[objid].callback = pokeball_player_throw_arc;
-    objects[objid].priv[0] = bank;
+    gSprites[objid].callback = pokeball_player_throw_arc;
+    gSprites[objid].data[0] = bank;
 
-    objects[objid].priv[6] = 0x25; // Delay timer
-    objects[objid].rotscale_table = (const struct RotscaleFrame(**)[])&spin_ptr;
-    objects[objid].final_oam.affine_mode = 1;
+    gSprites[objid].data[6] = 0x25; // Delay timer
+    gSprites[objid].rotscale_table = (const struct RotscaleFrame(**)[])&spin_ptr;
+    gSprites[objid].final_oam.affine_mode = 1;
 }

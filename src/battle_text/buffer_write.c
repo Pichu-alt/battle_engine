@@ -15,17 +15,17 @@ void buffer_write_pkmn_nick(pchar* buffer, u8 bank)
 void buffer_pkmn_nick_arbitrary(pchar* buffer, u8 bank, u8 slot)
 {
     if (SIDE_OF(bank)) {
-        memcpy(buffer, party_opponent[slot].base.nick, sizeof(party_opponent[slot].base.nick));
-        buffer[sizeof(party_opponent[slot].base.nick)] = 0xFF;
+        memcpy(buffer, party_opponent[slot].box.nick, sizeof(party_opponent[slot].box.nick));
+        buffer[sizeof(party_opponent[slot].box.nick)] = 0xFF;
     } else {
-        memcpy(buffer, party_player[slot].base.nick, sizeof(party_player[slot].base.nick));
-        buffer[sizeof(party_player[slot].base.nick)] = 0xFF;
+        memcpy(buffer, party_player[slot].box.nick, sizeof(party_player[slot].box.nick));
+        buffer[sizeof(party_player[slot].box.nick)] = 0xFF;
     }
 }
 
 void buffer_write_player_name(pchar* buffer)
 {
-    pstrcpy(buffer, saveblock2->name);
+    pstrcpy(buffer, gSaveBlock2Ptr->playerName);
 }
 
 void buffer_write_move_name(pchar* buffer, u16 move_id)
@@ -178,7 +178,7 @@ void fdecoder_battle(pchar* buffer, u8 bank, u16 move_id, u16 move_effect_id)
                     // buffer name of a weather
                         if (move_effect_id == MOVE_HAIL) {
                             pstrcpy(&result[result_index], (const pchar*)str_hail_w);
-                        } else if (move_effect_id == MOVE_RAIN_DANCE) {
+                        } else if (move_effect_id == MOVE_RAINDANCE) {
                             pstrcpy(&result[result_index], (const pchar*)str_rain_w);
                         } else {
                             pstrcpy(&result[result_index], (const pchar*)str_sandstorm_w);

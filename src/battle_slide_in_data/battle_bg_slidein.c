@@ -51,25 +51,25 @@ void hblank_battle_bgslide(void)
 
 void intro_wild_battle()
 {
-    switch (super.multi_purpose_state_tracker) {
+    switch (gMain.state) {
         case 0:
             // set callbacks and vblank interrupt
-            vblank_handler_set((SuperCallback)vblank_cb_merge_tbox_sliding);
-            set_callback2((SuperCallback)c2_battle);
+            SetVBlankCallback((MainCallback)vblank_cb_merge_tbox_sliding);
+            SetMainCallback2((MainCallback)c2_battle);
             // put everything in the window
             REG_WININ = WININ_BUILD(WIN_BG0 | WIN_BG1 | WIN_BG2 | WIN_BG3 | WIN_OBJ | WIN_BLD,
             WIN_BG0 | WIN_BG1 | WIN_BG2 | WIN_BG3 | WIN_OBJ | WIN_BLD);
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 1:
             bg_vram_setup(0, (struct BgConfig *)&bg_config_data, 4);
             // init textbox
             rbox_init_from_templates((struct TextboxTemplate*)0x8248330);
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 2:
             pick_and_load_battle_bgs();
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 3:
             /*
@@ -82,13 +82,13 @@ void intro_wild_battle()
             // darken factor of 7
             REG_BLDY = 0x7;
             battle_scene_intialize_sprites();
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 4:
             // show bgs for background and entry image
-            gpu_sync_bg_show(3);
-            gpu_sync_bg_show(1);
-            gpu_sync_bg_show(0);
+            ShowBg(3);
+            ShowBg(1);
+            ShowBg(0);
 
             // enable wraparound for BG3 and BG1 (platform and entry image)
             REG_BG3CNT |= 0x2000;
@@ -96,8 +96,8 @@ void intro_wild_battle()
 
             // activate hblank interrupt
             interrupts_enable(2);
-            hblank_handler_set((SuperCallback)hblank_battle_bgsslide_win_open);
-            super.multi_purpose_state_tracker++;
+            SetHBlankCallback((MainCallback)hblank_battle_bgsslide_win_open);
+            gMain.state++;
             break;
         case 5:
             // set initial position for BG bottom and top half
@@ -107,7 +107,7 @@ void intro_wild_battle()
             // set initial position for center of open effect (160 / 2 = 80 = center)
             bs_env_windows->wintop = 80;
             bs_env_windows->winbot = 80;
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 6:
             // there is a window in which the entry image and BG are moving
@@ -115,7 +115,7 @@ void intro_wild_battle()
             bs_env_windows->wintop -= 1;
             bs_env_windows->winbot += 1;
             if (bs_env_windows->wintop < 20)
-                super.multi_purpose_state_tracker++;
+                gMain.state++;
             break;
         case 7:
         {
@@ -126,28 +126,28 @@ void intro_wild_battle()
             battlers_move_into_scene();
             // the Hblank is lightened since the window effect is unneeded at this point
             if (bs_env_windows->wintop <= 0) {
-                hblank_handler_set((SuperCallback)hblank_battle_bgslide);
+                SetHBlankCallback((MainCallback)hblank_battle_bgslide);
                 REG_DISPCNT = 0x7B60;
             }
             // once the sliding is done, continue next state
             if (bs_env_windows->top_side > -3)
-                super.multi_purpose_state_tracker++;
+                gMain.state++;
             break;
         }
         case 8:
         {
             interrupts_disable(2);
-            hblank_handler_set(NULL);
-            vblank_handler_set((SuperCallback)vblank_cb_merge_tbox);
+            SetHBlankCallback(NULL);
+            SetVBlankCallback((MainCallback)vblank_cb_merge_tbox);
             // light up opponents gradually and disable entry image
             u8 t_id = task_add(task_lightup_objs, 0x1);
             tasks[t_id].priv[0] = 0x7;
-            gpu_sync_bg_hide(1);
+            HideBg(1);
 
             // spawn HP boxes
             spawn_hpboxes_wild();
-            super.multi_purpose_state_tracker = 0;
-            set_callback1((SuperCallback)start_battle);
+            gMain.state = 0;
+            SetMainCallback((MainCallback)start_battle);
         }
         case 10:
             break;
@@ -168,8 +168,8 @@ void task_lightup_objs(u8 t_id)
         REG_BLDCNT = 0;
 
         // player side remove blending
-        objects[bs_env_windows->player_trainer_objid].final_oam.obj_mode = 0;
-        objects[bs_env_windows->partner_trainer_objid].final_oam.obj_mode = 0;
+        gSprites[bs_env_windows->player_trainer_objid].final_oam.obj_mode = 0;
+        gSprites[bs_env_windows->partner_trainer_objid].final_oam.obj_mode = 0;
         task_del(t_id);
     }
 }

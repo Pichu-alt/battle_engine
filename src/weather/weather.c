@@ -32,10 +32,10 @@ u16 rain_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
         return true;
     }
     if (acb->duration == 0) {
-        enqueue_message(NULL, NULL, STRING_RAIN_STOPPED, MOVE_RAIN_DANCE);
+        enqueue_message(NULL, NULL, STRING_RAIN_STOPPED, MOVE_RAINDANCE);
         battle_master->field_state.is_raining = false;
     } else {
-        enqueue_message(NULL, NULL, STRING_RAIN_FALLING, MOVE_RAIN_DANCE);
+        enqueue_message(NULL, NULL, STRING_RAIN_FALLING, MOVE_RAINDANCE);
     }
     return true;
 }
@@ -45,7 +45,7 @@ void rain_init_effect()
     battle_master->field_state.is_raining = true;
     add_callback(CB_ON_RESIDUAL, 1, 5, NULL, (u32)rain_on_residual);
     add_callback(CB_ON_WEATHER_DMG, 0, 5, 0, (u32)rain_dmg_mod);
-    enqueue_message(0, 0, STRING_RAINING, MOVE_RAIN_DANCE);
+    enqueue_message(0, 0, STRING_RAINING, MOVE_RAINDANCE);
     return true;
 }
 

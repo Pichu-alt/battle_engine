@@ -75,7 +75,7 @@ u8 leech_seed_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* 
     if (user != src) return true;
     u8 dmg = MAX(1, (TOTAL_HP(user) / 8));
     if (do_damage_residual(user, dmg, NULL)) {
-        CURRENT_MOVE(acb->data_ptr) = MOVE_LEECH_SEED;
+        CURRENT_MOVE(acb->data_ptr) = MOVE_LEECHSEED;
         B_MOVE_DMG(acb->data_ptr) = dmg;
         TARGET_OF(acb->data_ptr) = user;
         prepend_action(acb->data_ptr, user, ActionHeal, EventDrain);

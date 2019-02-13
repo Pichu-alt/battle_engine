@@ -10,9 +10,9 @@ extern void set_attack_bm_inplace(u8 bank, u8 index, s8 priority);
 extern bool knows_move(u16 move_id, u8 bank);
 
 const static u16 encore_disallow[] = {
-    MOVE_ASSIST, MOVE_COPYCAT, MOVE_ENCORE, MOVE_ME_FIRST,
-    MOVE_METRONOME, MOVE_MIMIC, MOVE_MIRROR_MOVE,
-    MOVE_NATURE_POWER, MOVE_SKETCH, MOVE_SLEEP_TALK,
+    MOVE_ASSIST, MOVE_COPYCAT, MOVE_ENCORE, MOVE_MEFIRST,
+    MOVE_METRONOME, MOVE_MIMIC, MOVE_MIRRORMOVE,
+    MOVE_NATUREPOWER, MOVE_SKETCH, MOVE_SLEEPTALK,
     MOVE_STRUGGLE, MOVE_TRANSFORM, MOVE_NONE,
 };
 
@@ -192,7 +192,7 @@ bool throat_chop_disable_move(u8 user, u8 src, u16 move, struct anonymous_callba
         // we want to display a message when player picks an invalid move.
         // Obviously not display the message to the AI.
         if (!SIDE_OF(user))
-            enqueue_message(move, user, STRING_CANT_REASON, MOVE_THROAT_CHOP);
+            enqueue_message(move, user, STRING_CANT_REASON, MOVE_THROATCHOP);
         return false;
     }
     return true;

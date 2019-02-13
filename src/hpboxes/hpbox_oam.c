@@ -67,7 +67,7 @@ const struct OamData hpbar_status_oam = {
 static const struct Frame (**nullframe)[] = (const struct Frame (**)[])0x8231CF0;
 static const struct RotscaleFrame (**nullrsf)[] = (const struct RotscaleFrame (**)[])0x8231CFC;
 
-extern void oac_nullsub(struct Object*);
+extern void oac_nullsub(struct Sprite*);
 
 void refresh_hp(struct Pokemon* pkmn, u8 objid, u8 mode, u8 bank, u8* tiles)
 {
@@ -93,7 +93,7 @@ void refresh_hp(struct Pokemon* pkmn, u8 objid, u8 mode, u8 bank, u8* tiles)
     }
 
     /* Build the HP Bar graphic */
-    void* vram_addr =  (void*)((0x6010000)+ (objects[objid].final_oam.tile_num * 32));
+    void* vram_addr =  (void*)((0x6010000)+ (gSprites[objid].final_oam.tile_num * 32));
     memcpy(vram_addr, tiles + 1024, 32 * 2); // copy the "HP:" part
     vram_addr += 64;
     u8 i, j;
@@ -118,8 +118,8 @@ u8 hpbar_build_full(struct Pokemon* pkmn, s16 x, s16 y, u16 tag)
 {
     /* commit the empty bar to memory */
     struct SpritePalette hpbar_sprite_pal = {(void*)hpbar_piecesPal, tag};
-    struct SpriteTiles hpbar_sprite_gfx = {(void*)empty_barTiles, 1024, tag};
-    struct Template hpbar_temp = {tag, tag, &hpbar_oam, nullframe, &hpbar_sprite_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet hpbar_sprite_gfx = {(void*)empty_barTiles, 1024, tag};
+    struct Template hpbar_temp = {tag, tag, &hpbar_oam, nullframe, &hpbar_sprite_gfx, nullrsf, (SpriteCallback)oac_nullsub};
     gpu_tile_obj_decompress_alloc_tag_and_upload(&hpbar_sprite_gfx);
     gpu_pal_decompress_alloc_tag_and_upload(&hpbar_sprite_pal);
     u8 objid_main = template_instanciate_forward_search(&hpbar_temp, x, y, 0);
@@ -133,12 +133,12 @@ u8 hpbar_build_transparent(struct Pokemon* pkmn, s16 x, s16 y, u16 tag)
 {
     /* commit the empty bar to memory */
     struct SpritePalette hpbar_sprite_pal = {(void*)hpbar_pieces_switchPal, tag};
-    struct SpriteTiles hpbar_sprite_gfx = {(void*)empty_barTiles, 1024, tag};
-    struct Template hpbar_temp = {tag, tag, &hpbar_oam, nullframe, &hpbar_sprite_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet hpbar_sprite_gfx = {(void*)empty_barTiles, 1024, tag};
+    struct Template hpbar_temp = {tag, tag, &hpbar_oam, nullframe, &hpbar_sprite_gfx, nullrsf, (SpriteCallback)oac_nullsub};
     gpu_tile_obj_decompress_alloc_tag_and_upload(&hpbar_sprite_gfx);
     gpu_pal_decompress_alloc_tag_and_upload(&hpbar_sprite_pal);
     u8 objid_main = template_instanciate_forward_search(&hpbar_temp, x, y, 0);
-    objects[objid_main].final_oam.priority = 0;
+    gSprites[objid_main].final_oam.priority = 0;
     // update hp
     refresh_hp(pkmn, objid_main, 0, 0, (u8*)hpbar_pieces_switchTiles);
     return objid_main;
@@ -185,7 +185,7 @@ void draw_hp(struct Pokemon* pkmn, u8 tile_id, u8 objid, u8 mode, u8 bank)
     pstrcat(string_buffer, hp_buff);
 
     u8 rboxid_buffer;
-    void* vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
+    void* vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
     u32 pixels = write_to_rbox(&string_buffer[0], 1, 4, &rboxid_buffer);
     rbox_to_vram(vram_addr, (void*)(pixels), tile_length);
 
@@ -205,7 +205,7 @@ void draw_level(struct Pokemon* pkmn, u8 tile_id, u8 objid)
     pstrcat(string_buffer, level_buff);
 
     u8 rboxid_buffer;
-    void* vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
+    void* vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
     u32 pixels = write_to_rbox(&string_buffer[0], 1, 3, &rboxid_buffer);
     rbox_to_vram(vram_addr, (void*)(pixels), 3);
 
@@ -251,7 +251,7 @@ void status_graphical_update(u8 bank, enum Effect status)
             break;
 
     }
-    void* vram_address = (void*)((objects[p_bank[bank]->objid_hpbox[3]].final_oam.tile_num * 32) + 0x06010000);
+    void* vram_address = (void*)((gSprites[p_bank[bank]->objid_hpbox[3]].final_oam.tile_num * 32) + 0x06010000);
     if (setflag)
         memset(vram_address, 0, 128);
     else {
@@ -270,7 +270,7 @@ void draw_name(struct Pokemon* pkmn, u8 tile_id, u8 tile_id2, u8 objid, enum HPF
 
     /* Copy name and prefix into buffer */
     pstrcpy(string_buffer, &name_prefix[0]);
-    memcpy(&string_buffer[sizeof(name_prefix) - 1], &pkmn->base.nick[0], 10);
+    memcpy(&string_buffer[sizeof(name_prefix) - 1], &pkmn->box.nick[0], 10);
     // set last char to 0xFF, 10 character names aren't 0xFF terminated
     string_buffer[sizeof(name_prefix) + 9] = 0xFF;
 
@@ -297,13 +297,13 @@ void draw_name(struct Pokemon* pkmn, u8 tile_id, u8 tile_id2, u8 objid, enum HPF
     /* Sync Rbox into object */
     if (mode == HPFONT_PLAYER_SINGLE) {
         // first part of Hp box for player can handle only 3 tiles, second can hold 4
-        vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
+        vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
         rbox_to_vram(vram_addr, (void*)pixels, 3);
         vram_addr += (32 * tile_id2);
         rbox_to_vram(vram_addr, (void*)(pixels + (32 * 3)), 4);
     } else if (mode == HPFONT_OPP_SINGLE) {
         // opponent bar can hold the entire string in first obj
-        vram_addr = (void*)((objects[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
+        vram_addr = (void*)((gSprites[objid].final_oam.tile_num * 32) + (tile_id * 32)+ 0x6010000);
         rbox_to_vram(vram_addr, (void*)(pixels), 7);
     }
     // once written on Object, we can free this
@@ -315,14 +315,14 @@ void draw_name(struct Pokemon* pkmn, u8 tile_id, u8 tile_id2, u8 objid, enum HPF
 u8 spawn_hpbox_opponent(u16 tag, s16 x, s16 y, u8 bank)
 {
     struct SpritePalette hpbox_sprite_pal = {(void*)hpbox_opponent_singlesPal, tag};
-    struct SpriteTiles hpbox_sprite_gfx = {(void*)hpbox_opponent_singlesTiles, 4096, tag};
-    struct Template hpbox_temp = {tag, tag, &hpbox_oam, nullframe, &hpbox_sprite_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet hpbox_sprite_gfx = {(void*)hpbox_opponent_singlesTiles, 4096, tag};
+    struct Template hpbox_temp = {tag, tag, &hpbox_oam, nullframe, &hpbox_sprite_gfx, nullrsf, (SpriteCallback)oac_nullsub};
 
     gpu_tile_obj_decompress_alloc_tag_and_upload(&hpbox_sprite_gfx);
     gpu_pal_decompress_alloc_tag_and_upload(&hpbox_sprite_pal);
     u8 objid_main = template_instanciate_forward_search(&hpbox_temp, x, y, 0);
     u8 objid = template_instanciate_forward_search(&hpbox_temp, x + 64, y, 0);
-    objects[objid].final_oam.tile_num += 64;
+    gSprites[objid].final_oam.tile_num += 64;
     draw_name(&party_opponent[0], NAME_OS_OFFSET1, NAME_OS_OFFSET2, objid_main, HPFONT_OPP_SINGLE);
     p_bank[bank]->objid_hpbox[0] = objid_main;
     p_bank[bank]->objid_hpbox[1] = objid;
@@ -335,9 +335,9 @@ u8 spawn_hpbox_opponent(u16 tag, s16 x, s16 y, u8 bank)
     u16 s_tag = HPBOX_STATUS_TAG_OPP_SINGLE;
     u16 s_x = HPBOX_STATUS_OPP_SINGLE_X;
     u16 s_y = HPBOX_STATUS_OPP_SINGLE_Y;
-    struct SpriteTiles status_tiles = {(void*)hpbar_piecesTiles, 128, s_tag};
+    struct CompressedSpriteSheet status_tiles = {(void*)hpbar_piecesTiles, 128, s_tag};
     gpu_tile_obj_decompress_alloc_tag_and_upload(&status_tiles);
-    struct Template status_temp = {s_tag, HPBAR_OS_TAG, &hpbar_status_oam, nullframe, &status_tiles, nullrsf, (ObjectCallback)oac_nullsub};
+    struct Template status_temp = {s_tag, HPBAR_OS_TAG, &hpbar_status_oam, nullframe, &status_tiles, nullrsf, (SpriteCallback)oac_nullsub};
     p_bank[bank]->objid_hpbox[3] = template_instanciate_forward_search(&status_temp, s_x, s_y, 0);
 
 
@@ -365,15 +365,15 @@ u8 spawn_hpbox_player(u16 tag, s16 x, s16 y, u8 bank)
 {
     /* Create HP Box object for player */
     struct SpritePalette hpbox_sprite_pal = {(void*)hpbox_player_singlesPal, tag};
-    struct SpriteTiles hpbox_sprite_gfx = {(void*)hpbox_player_singlesTiles, 4096, tag};
-    struct Template hpbox_temp = {tag, tag, &hpbox_oam, nullframe, &hpbox_sprite_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet hpbox_sprite_gfx = {(void*)hpbox_player_singlesTiles, 4096, tag};
+    struct Template hpbox_temp = {tag, tag, &hpbox_oam, nullframe, &hpbox_sprite_gfx, nullrsf, (SpriteCallback)oac_nullsub};
 
     // init structs. HP box is 2 Objects put together
     gpu_tile_obj_decompress_alloc_tag_and_upload(&hpbox_sprite_gfx);
     gpu_pal_decompress_alloc_tag_and_upload(&hpbox_sprite_pal);
     u8 objid_main = template_instanciate_forward_search(&hpbox_temp, x, y, 0);
     u8 objid = template_instanciate_forward_search(&hpbox_temp, x + 64, y, 0);
-    objects[objid].final_oam.tile_num += 64;
+    gSprites[objid].final_oam.tile_num += 64;
     p_bank[bank]->objid_hpbox[0] = objid_main;
     p_bank[bank]->objid_hpbox[1] = objid;
 
@@ -387,9 +387,9 @@ u8 spawn_hpbox_player(u16 tag, s16 x, s16 y, u8 bank)
     u16 s_tag = HPBOX_STATUS_TAG_PLAYER_SINGLE;
     u16 s_x = HPBOX_STATUS_PLAYER_SINGLE_X;
     u16 s_y = HPBOX_STATUS_PLAYER_SINGLE_Y;
-    struct SpriteTiles status_tiles = {(void*)hpbar_piecesTiles, 128, s_tag};
+    struct CompressedSpriteSheet status_tiles = {(void*)hpbar_piecesTiles, 128, s_tag};
     gpu_tile_obj_alloc_tag_and_upload(&status_tiles);
-    struct Template status_temp = {s_tag, HPBAR_PS_TAG, &hpbar_status_oam, nullframe, &status_tiles, nullrsf, (ObjectCallback)oac_nullsub};
+    struct Template status_temp = {s_tag, HPBAR_PS_TAG, &hpbar_status_oam, nullframe, &status_tiles, nullrsf, (SpriteCallback)oac_nullsub};
     p_bank[bank]->objid_hpbox[3] = template_instanciate_forward_search(&status_temp, s_x, s_y, 0);
 
 
@@ -421,10 +421,10 @@ void opp_hpbar_slidin_slow(u8 t_id)
         return;
     }
 
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[0]].pos1.x += 4;
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[1]].pos1.x += 4;
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[2]].pos1.x += 4;
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[3]].pos1.x += 4;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[0]].pos1.x += 4;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[1]].pos1.x += 4;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[2]].pos1.x += 4;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[3]].pos1.x += 4;
 }
 
 void player_hpbar_slidin_slow(u8 t_id)
@@ -435,25 +435,25 @@ void player_hpbar_slidin_slow(u8 t_id)
         bs_anim_status = 0;
         return;
     }
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[0]].pos1.x -= 4;
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[1]].pos1.x -= 4;
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[2]].pos1.x -= 4;
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[3]].pos1.x -= 4;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[0]].pos1.x -= 4;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[1]].pos1.x -= 4;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[2]].pos1.x -= 4;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[3]].pos1.x -= 4;
 }
 
 void spawn_hpboxes_wild(void)
 {
     spawn_hpbox_opponent(HPBOX_TAG_OPP_SW, HPBOX_OPP_SW_X, HPBOX_OPP_SW_Y, OPPONENT_SINGLES_BANK);
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[0]].pos1.x -= 128;
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[1]].pos1.x -= 128;
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[2]].pos1.x -= 128;
-    objects[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[3]].pos1.x -= 128;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[0]].pos1.x -= 128;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[1]].pos1.x -= 128;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[2]].pos1.x -= 128;
+    gSprites[p_bank[OPPONENT_SINGLES_BANK]->objid_hpbox[3]].pos1.x -= 128;
     task_add(opp_hpbar_slidin_slow, 1);
     spawn_hpbox_player(HPBOX_TAG_PLAYER_SINGLE, HPBOX_PLAYER_SINGLE_X, HPBOX_PLAYER_SINGLE_Y, PLAYER_SINGLES_BANK);
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[0]].pos1.x += 128;
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[1]].pos1.x += 128;
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[2]].pos1.x += 128;
-    objects[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[3]].pos1.x += 128;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[0]].pos1.x += 128;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[1]].pos1.x += 128;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[2]].pos1.x += 128;
+    gSprites[p_bank[PLAYER_SINGLES_BANK]->objid_hpbox[3]].pos1.x += 128;
 }
 
 
@@ -526,7 +526,7 @@ void status_switch_menu(u8 objid, u8 ailment)
             setflag = true;
             break;
     };
-    void* vram_address = (void*)((objects[objid].final_oam.tile_num * 32) + 0x06010000 + (32 * 8));
+    void* vram_address = (void*)((gSprites[objid].final_oam.tile_num * 32) + 0x06010000 + (32 * 8));
     if (setflag)
         memset(vram_address, 0, 96);
     else

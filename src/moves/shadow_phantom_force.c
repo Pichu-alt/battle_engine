@@ -17,7 +17,7 @@ u8 shadow_force_phantom_force_effect(u8 user, u8 src, u8 string_id) {
     CLEAR_VOLATILE(user, VOLATILE_SEMI_INVULNERABLE);
     // on after charge complete, break protection effect
     if (break_protection(TARGET_OF(src))) {
-        enqueue_message(MOVE_SHADOW_FORCE, src, STRING_BROKE_PROTECT, 0);
+        enqueue_message(MOVE_SHADOWFORCE, src, STRING_BROKE_PROTECT, 0);
     }
 
     // accuracy umissable and double power when hitting a minimizer

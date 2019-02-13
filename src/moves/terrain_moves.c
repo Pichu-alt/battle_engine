@@ -19,7 +19,7 @@ void electric_terrain_on_base_power(u8 user, u8 src, u16 move, struct anonymous_
 bool electric_terrain_on_status(u8 user, u8 src, u16 status_id, struct anonymous_callback* acb)
 {
     if ((status_id == EFFECT_SLEEP) && is_grounded(user)) {
-        enqueue_message(MOVE_ELECTRIC_TERRAIN, user, STRING_AILMENT_IMMUNE, status_id);
+        enqueue_message(MOVE_ELECTRICTERRAIN, user, STRING_AILMENT_IMMUNE, status_id);
         return false;
     }
     return true;
@@ -29,7 +29,7 @@ u16 electric_terrain_on_residual(u8 user, u8 src, u16 status_id, struct anonymou
 {
     if (acb->in_use) {
         battle_master->field_state.is_electric_terrain = false;
-        enqueue_message(MOVE_ELECTRIC_TERRAIN, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_ELECTRICTERRAIN, user, STRING_MOVE_ENDED, NULL);
     }
     acb->in_use = false;
     return true;
@@ -78,7 +78,7 @@ u16 grassy_terrain_on_residual(u8 user, u8 src, u16 status_id, struct anonymous_
         }
     } else {
         if (acb->in_use) {
-            enqueue_message(MOVE_GRASSY_TERRAIN, user, STRING_MOVE_ENDED, NULL);
+            enqueue_message(MOVE_GRASSYTERRAIN, user, STRING_MOVE_ENDED, NULL);
             battle_master->field_state.is_grassy_terrain = false;
             acb->in_use = false;
         }
@@ -102,7 +102,7 @@ u8 grassy_terrain_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback
 bool misty_terrain_on_status(u8 user, u8 src, u16 status_id, struct anonymous_callback* acb)
 {
     if (is_grounded(user) && ((status_id != EFFECT_CURE) && (status_id != EFFECT_NONE))) {
-        enqueue_message(MOVE_MISTY_TERRAIN, user, STRING_AILMENT_IMMUNE, status_id);
+        enqueue_message(MOVE_MISTYTERRAIN, user, STRING_AILMENT_IMMUNE, status_id);
         return false;
     }
     return true;
@@ -118,7 +118,7 @@ void misty_terrain_on_base_power(u8 user, u8 src, u16 move, struct anonymous_cal
 u16 misty_terrain_on_residual(u8 user, u8 src, u16 status_id, struct anonymous_callback* acb)
 {
     if (acb->in_use) {
-        enqueue_message(MOVE_MISTY_TERRAIN, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_MISTYTERRAIN, user, STRING_MOVE_ENDED, NULL);
         battle_master->field_state.is_misty_terrain = false;
         acb->in_use = false;
     }
@@ -159,7 +159,7 @@ void psychic_terrain_on_base_power(u8 user, u8 src, u16 move, struct anonymous_c
 u16 psychic_terrain_on_residual(u8 user, u8 src, u16 status_id, struct anonymous_callback* acb)
 {
     if (acb->in_use) {
-        enqueue_message(MOVE_PSYCHIC_TERRAIN, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_PSYCHICTERRAIN, user, STRING_MOVE_ENDED, NULL);
         battle_master->field_state.is_psychic_terrain = false;
         acb->in_use = false;
     }

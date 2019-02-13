@@ -7,16 +7,16 @@
 const static bool USE_TESTS = true; // Change to false to not execute the test environment
 
 /* Player data */
-const static u16 player_species = SPECIES_GASTLY;
+const static u16 player_species = 15;
 const static u16 player_move_1 = MOVE_QUASH;
 const static u16 player_move_2 = MOVE_RECOVER;
 const static u16 player_move_3 = MOVE_ACID;
-const static u16 player_move_4 = MOVE_DRILL_PECK;
+const static u16 player_move_4 = MOVE_DRILLPECK;
 const static u8 player_level = 15;
 const u8 player_ability = ABILITY_COMATOSE;
 
 /* Opponent data */
-const static u16 opponent_species = SPECIES_GOLEM;
+const static u16 opponent_species = 26;
 const static u16 opponent_move_1 = MOVE_PURSUIT;
 const static u16 opponent_move_2 = MOVE_PURSUIT;
 const static u16 opponent_move_3 = MOVE_PURSUIT;
@@ -54,8 +54,9 @@ void set_side_battle_components(u8 side)
 
 void test_battle_data()
 {
-	if (USE_TESTS) {
-		set_side_battle_components(0);
-		set_side_battle_components(1);
-	}
+	return;
+	// if (USE_TESTS) {
+	// 	set_side_battle_components(0);
+	// 	set_side_battle_components(1);
+	// }
 }

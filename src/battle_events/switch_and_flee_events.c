@@ -94,9 +94,9 @@ void event_switch(struct action* current_action)
             sync_battler_struct(i);
         }
     }
-    super.multi_purpose_state_tracker = 0;
+    gMain.state = 0;
     // the recall animation is in the switch scene folder; onlyplayer supported as of now
-    set_callback1(pkmn_recall_animation);
+    SetMainCallback(pkmn_recall_animation);
 }
 
 

@@ -16,14 +16,15 @@ u32 calc_exp(u8 fainted, u8 reciever)
     base_yield = pokemon_base_stats[base_yield].xp_yield;
     u8 fainted_lvl = p_bank[fainted]->b_data.level;
     u8 reciever_lvl = p_bank[reciever]->b_data.level;
-    
-    u8 traded = pokemon_getattr(p_bank[reciever]->this_pkmn, REQUEST_TID, NULL);
-    traded = (traded == saveblock2->trainerid) ? 100 : 150;
-    
+
+    u32 traded = pokemon_getattr(p_bank[reciever]->this_pkmn, REQUEST_TID, NULL);
+    u32* temp = (u32*)&gSaveBlock2Ptr->playerTrainerId;
+    traded = (traded == *temp) ? 100 : 150;
+
     u32 exp_part1 = fainted_lvl * base_yield;
     exp_part1 = PERCENT(exp_part1, trainer_mon);
     exp_part1 = exp_part1 / 5;
-    
+
     u32 exp_part2 = ((2 *fainted_lvl) + 10);
     exp_part2 *= (exp_part2 * PERCENT(exp_part2, 50));
     u32 exp_part3 = (fainted_lvl + reciever_lvl + 10);
@@ -31,7 +32,7 @@ u32 calc_exp(u8 fainted, u8 reciever)
     exp_part2 /= exp_part3;
     exp_part2 = MAX(exp_part2, 1);
     exp_part1 = (exp_part1 * exp_part2) + 1;
-    return PERCENT(exp_part1, traded);   
+    return PERCENT(exp_part1, traded);
 }
 
 /* TODO exp share item - probably as a callback here */
@@ -54,4 +55,3 @@ void give_exp(u8 fainted, u8 reciever)
     }
     return;
 }
-

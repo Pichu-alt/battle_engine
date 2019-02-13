@@ -171,7 +171,7 @@ void echoed_voice_after_move(u8 user, u8 src, u16 move, struct anonymous_callbac
     if (user != src) return true;
     // don't make a duplicate for echoed voice's counter
     for (u8 i = 0; i < BANK_MAX; i++) {
-        if (CURRENT_MOVE(i) == MOVE_ECHOED_VOICE) {
+        if (CURRENT_MOVE(i) == MOVE_ECHOEDVOICE) {
             acb->duration += 1;
             acb->data_ptr += 1;
             acb->data_ptr = MIN(acb->data_ptr, 5); // clamp at 5
@@ -199,7 +199,7 @@ void fury_cutter_after_move(u8 user, u8 src, u16 move, struct anonymous_callback
     if (user != src) return true;
     // don't make a duplicate for echoed voice's counter
     for (u8 i = 0; i < BANK_MAX; i++) {
-        if (CURRENT_MOVE(i) == MOVE_FURY_CUTTER) {
+        if (CURRENT_MOVE(i) == MOVE_FURYCUTTER) {
             acb->duration += 1;
             acb->data_ptr += 1;
             acb->data_ptr = MIN(acb->data_ptr, 5); // clamp at 5

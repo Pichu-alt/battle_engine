@@ -25,7 +25,7 @@ u8 hurricane_on_tryhit_inv(u8 user, u8 src, u16 move, struct anonymous_callback*
     if (user != src) return true;
     u8 defender = TARGET_OF(user);
     if ((CURRENT_MOVE(defender) == MOVE_BOUNCE) || (CURRENT_MOVE(defender) == MOVE_FLY) ||
-         (CURRENT_MOVE(defender) == MOVE_SKY_DROP)) {
+         (CURRENT_MOVE(defender) == MOVE_SKYDROP)) {
          return true;
      }
      return false;

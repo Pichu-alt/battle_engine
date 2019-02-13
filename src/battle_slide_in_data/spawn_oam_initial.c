@@ -40,7 +40,7 @@ static const struct Frame (**nullframe)[] = (const struct Frame (**)[])0x8231CF0
 static const struct RotscaleFrame (**nullrsf)[] = (const struct RotscaleFrame (**)[])0x8231CFC;
 
 
-void oac_nullsub(struct Object* obj)
+void oac_nullsub(struct Sprite* spr)
 {
     return;
 }
@@ -71,8 +71,8 @@ u8 spawn_pkmn_obj_slot(u8 bank, u16 tag)
     void* pkmn_gfx = (void*)pokemon_graphics_front[species].data;
 
     struct SpritePalette pkmn_sprite_pal = {pkmn_pal, tag};
-    struct SpriteTiles pkmn_sprite_gfx = {pkmn_gfx, 2048, tag};
-    struct Template pkmn_temp = {tag, tag, &opp_oam, nullframe, &pkmn_sprite_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet pkmn_sprite_gfx = {pkmn_gfx, 2048, tag};
+    struct Template pkmn_temp = {tag, tag, &opp_oam, nullframe, &pkmn_sprite_gfx, nullrsf, (SpriteCallback)oac_nullsub};
 
     gpu_tile_obj_decompress_alloc_tag_and_upload(&pkmn_sprite_gfx);
     gpu_pal_decompress_alloc_tag_and_upload(&pkmn_sprite_pal);
@@ -88,8 +88,8 @@ u8 spawn_pkmn_backsprite_obj_slot(u8 bank, u16 tag)
     void* pkmn_gfx = (void*)pokemon_graphics_back[species].data;
 
     struct SpritePalette pkmn_sprite_pal = {pkmn_pal, tag};
-    struct SpriteTiles pkmn_sprite_gfx = {pkmn_gfx, 2048, tag};
-    struct Template pkmn_temp = {tag, tag, &opp_oam, nullframe, &pkmn_sprite_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet pkmn_sprite_gfx = {pkmn_gfx, 2048, tag};
+    struct Template pkmn_temp = {tag, tag, &opp_oam, nullframe, &pkmn_sprite_gfx, nullrsf, (SpriteCallback)oac_nullsub};
 
     gpu_tile_obj_decompress_alloc_tag_and_upload(&pkmn_sprite_gfx);
     gpu_pal_decompress_alloc_tag_and_upload(&pkmn_sprite_pal);
@@ -151,7 +151,7 @@ u8 spawn_backsprite_npc(u8 sprite_id, u16 tag)
         };
     } else {
         // gender based player character
-        if (walkrun_state.gender) {
+        if (gPlayerAvatar.gender) {
             player_pal = (void*)female_playerPal;
             player_gfx = (void*)female_playerTiles;
         } else {
@@ -161,13 +161,13 @@ u8 spawn_backsprite_npc(u8 sprite_id, u16 tag)
     }
 
     struct SpritePalette player_sprite_pal = {player_pal, tag};
-    struct SpriteTiles player_sprite_gfx = {player_gfx, 2048 * 5, tag};
-    struct Template player_temp = {tag, tag, &opp_oam, trainer_frame_table, &player_sprite_gfx, nullrsf, (ObjectCallback)oac_nullsub};
+    struct CompressedSpriteSheet player_sprite_gfx = {player_gfx, 2048 * 5, tag};
+    struct Template player_temp = {tag, tag, &opp_oam, trainer_frame_table, &player_sprite_gfx, nullrsf, (SpriteCallback)oac_nullsub};
 
     gpu_tile_obj_decompress_alloc_tag_and_upload(&player_sprite_gfx);
     gpu_pal_decompress_alloc_tag_and_upload(&player_sprite_pal);
     u8 objid = template_instanciate_forward_search(&player_temp, PLAYER_X_POS_SLIDE, 81, 0);
-    objects[objid].final_oam.obj_mode = 1;
+    gSprites[objid].final_oam.obj_mode = 1;
     return objid;
 }
 
@@ -179,7 +179,7 @@ void create_sprites_wild_battlers()
     p_bank[OPPONENT_SINGLES_BANK]->objid = objid;
 
     // gender based player character
-        if (walkrun_state.gender) {
+        if (gPlayerAvatar.gender) {
             objid = spawn_backsprite_npc(0, PLAYER_BTAG);
         } else {
             objid = spawn_backsprite_npc(1, PLAYER_BTAG);
@@ -200,12 +200,12 @@ void free_battler_oams()
 {
     for (u8 i = 0; i < BANK_MAX; i++) {
         if (p_bank[i]->objid < 0x3F) {
-            obj_free(&objects[p_bank[i]->objid]);
+            obj_free(&gSprites[p_bank[i]->objid]);
             p_bank[i]->objid = 0x3F;
         }
         for (u8 j = 0; j < 4; j++) {
             if (p_bank[i]->objid_hpbox[j] < 0x3F) {
-                obj_free(&objects[p_bank[i]->objid_hpbox[j]]);
+                obj_free(&gSprites[p_bank[i]->objid_hpbox[j]]);
                 p_bank[i]->objid_hpbox[j] = 0x3F;
             }
         }

@@ -82,7 +82,7 @@ void battle_loop()
         }
         update_callbacks();
         option_selection(0);
-        super.multi_purpose_state_tracker = 0;
+        gMain.state = 0;
     }
 }
 
@@ -99,7 +99,7 @@ void validate_player_selected_move()
     }
     wild_ai_pick_attack(OPPONENT_SINGLES_BANK);
     add_bank_move_actions();
-    set_callback1(battle_loop);
+    SetMainCallback(battle_loop);
 }
 
 void end_battle(struct action* a)
@@ -112,5 +112,5 @@ void end_battle(struct action* a)
     free(battle_master);
     free(p_bank[0]);
     exit_to_overworld_2_switch();
-    set_callback1(c1_overworld);
+    SetMainCallback(c1_overworld);
 }

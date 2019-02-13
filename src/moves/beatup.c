@@ -53,7 +53,7 @@ void beatup_before_turn(u8 user, u8 src, u16 move, struct anonymous_callback* ac
     u8 hitters = 1;
     for (u8 i = 0; i < 6; i++) {
         if (i == user_slot) continue;
-        if (pokemon_getattr(&p[i], REQUEST_SPECIES, NULL) == SPECIES_MISSINGNO) break;
+        if (pokemon_getattr(&p[i], REQUEST_SPECIES, NULL) == 0) break;
         u8 status = pokemon_getattr(&p[i], REQUEST_STATUS_AILMENT, NULL);
         u8 hp = pokemon_getattr(&p[i], REQUEST_CURRENT_HP, NULL);
         if ((status != 0) || (hp < 1 )) continue;

@@ -22,8 +22,8 @@ void init_battle_elements()
     // battle testing presets initialize
     test_battle_data();
     battle_type_flag = BATTLE_MODE_WILD;
-    set_callback1(intro_wild_battle);
-    super.multi_purpose_state_tracker = 0;
+    SetMainCallback(intro_wild_battle);
+    gMain.state = 0;
 }
 
 

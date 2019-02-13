@@ -30,7 +30,7 @@ u8 magnet_rise_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback*
 {
     if (acb->in_use) {
         acb->in_use = false;
-        enqueue_message(MOVE_MAGNET_RISE, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_MAGNETRISE, user, STRING_MOVE_ENDED, NULL);
         CLEAR_VOLATILE(src, VOLATILE_MAGNET_RISE);
     }
     return true;
@@ -52,9 +52,9 @@ u8 magnet_rise_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* a
 
 /* Telekinesis */
 
-const static u16 telekinesis_ban_list[] = {
-    SPECIES_DIGLETT, SPECIES_DUGTRIO, SPECIES_ALOLAN_DIGLETT, SPECIES_ALOLAN_DUGTRIO,
-    SPECIES_SANDYGAST, SPECIES_PALOSSAND, SPECIES_MEGA_GENGAR
+const u16 telekinesis_ban_list[] = {
+    188, 189
+    //SPECIES_SANDYGAST, SPECIES_PALOSSAND, //SPECIES_MEGA_GENGAR
 };
 
 u8 telekinesis_on_effectiveness(u8 target_type, u8 src, u16 move_type, struct anonymous_callback* acb)
@@ -109,7 +109,7 @@ u8 heal_block_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback* 
 {
     if (acb->in_use) {
         acb->in_use = false;
-        enqueue_message(MOVE_HEAL_BLOCK, user, STRING_MOVE_ENDED, NULL);
+        enqueue_message(MOVE_HEALBLOCK, user, STRING_MOVE_ENDED, NULL);
         CLEAR_VOLATILE(src, VOLATILE_HEAL_BLOCK);
     }
     return true;
@@ -122,7 +122,7 @@ u8 heal_block_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* ac
     add_callback(CB_ON_DISABLE_MOVE, 0, 5, user, (u32)heal_block_on_disabled_move);
     u8 id = add_callback(CB_ON_RESIDUAL, 0, 0, TARGET_OF(user), (u32)heal_block_on_residual);
     CB_MASTER[id].delay_before_effect = 5;
-    enqueue_message(MOVE_HEAL_BLOCK, TARGET_OF(user), STRING_HEAL_PREVENT, NULL);
+    enqueue_message(MOVE_HEALBLOCK, TARGET_OF(user), STRING_HEAL_PREVENT, NULL);
     ADD_VOLATILE(TARGET_OF(user), VOLATILE_HEAL_BLOCK);
     return true;
 }

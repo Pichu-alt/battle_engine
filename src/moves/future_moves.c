@@ -23,7 +23,7 @@ u16 future_sight_on_residual(u8 user, u8 src, u16 move, struct anonymous_callbac
     u16 dmg = get_damage(user, (u8)acb->data_ptr, CURRENT_MOVE(user));
     do_damage((u8)acb->data_ptr, MAX(1, dmg));
     acb->in_use = false;
-    enqueue_message(MOVE_FUTURE_SIGHT, (u8)acb->data_ptr, STRING_TOOK_ATTACK, 0);
+    enqueue_message(MOVE_FUTURESIGHT, (u8)acb->data_ptr, STRING_TOOK_ATTACK, 0);
     return true;
 }
 
@@ -36,7 +36,7 @@ enum TryHitMoveStatus future_sight_on_tryhit(u8 user, u8 src, u16 move, struct a
     u8 id = add_callback(CB_ON_RESIDUAL, 0, 0, user, (u32)future_sight_on_residual);
     CB_MASTER[id].data_ptr = TARGET_OF(src);
     CB_MASTER[id].delay_before_effect = 3;
-    enqueue_message(MOVE_FUTURE_SIGHT, user, STRING_FUTURE_FORESAW, 0);
+    enqueue_message(MOVE_FUTURESIGHT, user, STRING_FUTURE_FORESAW, 0);
     return TRYHIT_FAIL_SILENTLY;
 }
 
@@ -90,7 +90,7 @@ u8 yawn_on_effect(u8 user, u8 src, u16 move, struct anonymous_callback* acb)
     u8 id = add_callback(CB_ON_RESIDUAL, 0, 0, user, (u32)yawn_on_residual);
     CB_MASTER[id].delay_before_effect = 1;
     CB_MASTER[id].data_ptr = TARGET_OF(user);
-    
+
     enqueue_message(0, user, STRING_GREW_DROWSY, 0);
     return true;
 }
@@ -123,7 +123,7 @@ u16 doom_desire_on_residual(u8 user, u8 src, u16 move, struct anonymous_callback
     u16 dmg = get_damage(user, (u8)acb->data_ptr, CURRENT_MOVE(user));
     do_damage((u8)acb->data_ptr, MAX(1, dmg));
     acb->in_use = false;
-    enqueue_message(MOVE_DOOM_DESIRE, (u8)acb->data_ptr, STRING_TOOK_ATTACK, 0);
+    enqueue_message(MOVE_DOOMDESIRE, (u8)acb->data_ptr, STRING_TOOK_ATTACK, 0);
     return true;
 }
 
@@ -136,6 +136,6 @@ enum TryHitMoveStatus doom_desire_on_tryhit(u8 user, u8 src, u16 move, struct an
     CB_MASTER[id].data_ptr = TARGET_OF(src);
     CB_MASTER[id].delay_before_effect = 3;
 
-    enqueue_message(MOVE_DOOM_DESIRE, user, STRING_DOOM_DESIRE, 0);
+    enqueue_message(MOVE_DOOMDESIRE, user, STRING_DOOM_DESIRE, 0);
     return TRYHIT_FAIL_SILENTLY;
 }

@@ -15,7 +15,7 @@ extern void hp_anim_change(u8 bank, s16 delta);
 
 void apply_heal()
 {
-    switch (super.multi_purpose_state_tracker) {
+    switch (gMain.state) {
         case 0:
         {
             u8 bank = CURRENT_ACTION->priv[0];
@@ -26,7 +26,7 @@ void apply_heal()
             if (heal > 0) {
                 hp_anim_change(bank, heal + B_CURRENT_HP(bank));
             }
-            super.multi_purpose_state_tracker = 2;
+            gMain.state = 2;
             break;
         }
         case 1:
@@ -36,25 +36,25 @@ void apply_heal()
             if (CURRENT_ACTION->priv[1] > 0) {
                 hp_anim_change(bank, B_CURRENT_HP(bank) + MIN(CURRENT_ACTION->priv[1], max_heal));
             }
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         }
         case 2:
             if (task_is_running(hpbar_apply_dmg))
                 return;
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         default:
             end_action(CURRENT_ACTION);
-            set_callback1(battle_loop);
+            SetMainCallback(battle_loop);
             break;
         };
 }
 
 void init_heal(struct action* a)
 {
-    super.multi_purpose_state_tracker = a->priv[2];
-    set_callback1(apply_heal);
+    gMain.state = a->priv[2];
+    SetMainCallback(apply_heal);
     return;
 }
 

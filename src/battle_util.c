@@ -5,6 +5,8 @@
 #include "battle_data/pkmn_bank.h"
 #include "battle_data/battle_state.h"
 
+#define SPECIES_MAX 900
+
 extern bool enqueue_message(u16 move, u8 bank, enum battle_string_ids id, u16 effect);
 extern void dprintf(const char * str, ...);
 
@@ -247,7 +249,7 @@ u8 count_usable_pokemon(u8 side)
         u16 current_hp = pokemon_getattr(&p[i], REQUEST_CURRENT_HP, NULL);
 
         // valid if it's a valid species, isn't an egg, and is alive.
-        if ((species < SPECIES_MAX) && (species > SPECIES_MISSINGNO) &&
+        if ((species < SPECIES_MAX) && (species > 0) &&
          (!is_egg) && (current_hp > 0)) {
             count++;
         }

@@ -26,7 +26,7 @@ static const struct RotscaleFrame shrink[] = {
 static const struct RotscaleFrame* shrink_ptr[] = {shrink};
 
 
-void reset_hpbars_and_sprite_player(struct Object* obj)
+void reset_hpbars_and_sprite_player(struct Sprite* spr)
 {
     // Free HP box and bars
     u8 bank = CURRENT_ACTION->action_bank;
@@ -42,56 +42,56 @@ void reset_hpbars_and_sprite_player(struct Object* obj)
 
     // Free player pkmn
     p_bank[bank]->objid = 0x3F;
-    obj_free(obj);
+    obj_free(spr);
 }
 
 
-void pkmn_recall_cb(struct Object* obj)
+void pkmn_recall_cb(struct Sprite* spr)
 {
-    if (obj->priv[0] < 25) {
-        obj->pos1.y += 2;
+    if (spr->data[0] < 25) {
+        spr->pos1.y += 2;
     } else {
-        reset_hpbars_and_sprite_player(obj);
+        reset_hpbars_and_sprite_player(spr);
     }
-    obj->priv[0]++;
+    spr->data[0]++;
 }
 
 
 void pkmn_player_normal_switch()
 {
-    switch (super.multi_purpose_state_tracker) {
+    switch (gMain.state) {
         case 0:
             {
                 u8 bank = CURRENT_ACTION->action_bank;
                 u8 objid = p_bank[bank]->objid;
-                objects[objid].rotscale_table = shrink_ptr;
-                objects[objid].priv[0] = 0;
-                objects[objid].callback = pkmn_recall_cb;
+                gSprites[objid].rotscale_table = shrink_ptr;
+                gSprites[objid].data[0] = 0;
+                gSprites[objid].callback = pkmn_recall_cb;
                 OBJID_SHOW_AFFINE(objid);
-                obj_rotscale_play(&objects[objid], 0);
+                obj_rotscale_play(&gSprites[objid], 0);
                 // fade only this OAM's palette to pink
-                u8 pal_slot = objects[objid].final_oam.palette_num;
+                u8 pal_slot = gSprites[objid].final_oam.palette_num;
                 u32 pal_fade = ((1 << (pal_slot + 16)));
-                fade_screen(pal_fade , 2, 0x10, 0x0, 0x7ADF);
-                super.multi_purpose_state_tracker++;
+                BeginNormalPaletteFade(pal_fade , 2, 0x10, 0x0, 0x7ADF);
+                gMain.state++;
                 break;
             }
         case 1:
             {
                 task_del(task_find_id_by_functpr(set_active_movement));
-                super.multi_purpose_state_tracker++;
+                gMain.state++;
                 break;
             }
         case 2:
             {
                 if (p_bank[CURRENT_ACTION->action_bank]->objid < 0x3F) return;
                 pchar text[] = _("Go! {STR_VAR_2}!");
-                memcpy(fcode_buffer3, p_bank[CURRENT_ACTION->action_bank]->this_pkmn->base.nick, sizeof(party_player[0].base.nick));
-                fcode_buffer3[sizeof(party_player[0].base.nick)] = 0xFF;
+                memcpy(fcode_buffer3, p_bank[CURRENT_ACTION->action_bank]->this_pkmn->box.nick, sizeof(party_player[0].box.nick));
+                fcode_buffer3[sizeof(party_player[0].box.nick)] = 0xFF;
                 fdecoder(string_buffer, text);
                 remo_reset_acknowledgement_flags();
                 battle_show_message((u8*)string_buffer, 0x18);
-                super.multi_purpose_state_tracker++;
+                gMain.state++;
                 break;
             }
        case 3:
@@ -102,24 +102,24 @@ void pkmn_player_normal_switch()
                 for (u8 i = 0; i < 4; i++) {
                     u8 objid = battle_master->switch_main.type_objid[i];
                     if (objid < 0x3F)
-                        obj_free(&objects[objid]);
+                        obj_free(&gSprites[objid]);
                     battle_master->switch_main.type_objid[i] = 0x3F;
                 }
 
                 // spawn new HP bar
                 spawn_hpbox_player(HPBOX_TAG_PLAYER_SINGLE, HPBOX_PLAYER_SINGLE_X, HPBOX_PLAYER_SINGLE_Y, bank);
-                objects[p_bank[bank]->objid_hpbox[0]].pos1.x += 128;
-                objects[p_bank[bank]->objid_hpbox[1]].pos1.x += 128;
-                objects[p_bank[bank]->objid_hpbox[2]].pos1.x += 128;
-                objects[p_bank[bank]->objid_hpbox[3]].pos1.x += 128;
-                super.multi_purpose_state_tracker++;
+                gSprites[p_bank[bank]->objid_hpbox[0]].pos1.x += 128;
+                gSprites[p_bank[bank]->objid_hpbox[1]].pos1.x += 128;
+                gSprites[p_bank[bank]->objid_hpbox[2]].pos1.x += 128;
+                gSprites[p_bank[bank]->objid_hpbox[3]].pos1.x += 128;
+                gMain.state++;
             }
             break;
         case 4:
-            if ((pal_fade_control.active) || (bs_anim_status)) return;
+            if ((gPaletteFade.active) || (bs_anim_status)) return;
             task_add(player_hpbar_slidin_slow, 1);
             bs_anim_status = 1;
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 5:
             if (bs_anim_status) return;
@@ -130,17 +130,17 @@ void pkmn_player_normal_switch()
             flags->pass_disables = false;
             update_pbank(CURRENT_ACTION->action_bank, flags);
             free(flags);
-            super.multi_purpose_state_tracker++;
+            gMain.state++;
             break;
         case 6:
-            if (!pal_fade_control.active) {
+            if (!gPaletteFade.active) {
                 run_after_switch(CURRENT_ACTION->action_bank);
                 p_bank[CURRENT_ACTION->action_bank]->b_data.is_switching = false;
                 u8 t_id = task_add(set_active_movement, 1);
                 tasks[t_id].priv[0] = CURRENT_ACTION->action_bank;
                 end_action(CURRENT_ACTION);
-                super.multi_purpose_state_tracker = 0;
-                set_callback1(battle_loop);
+                gMain.state = 0;
+                SetMainCallback(battle_loop);
             }
             break;
     };
@@ -153,16 +153,16 @@ void pkmn_recall_animation()
         case ViewPokemon:
             dprintf("Reason ViewPokemon given for switch into battle. Executing normal switch.");
         case NormalSwitch:
-            super.multi_purpose_state_tracker = 0;
-            set_callback1(pkmn_player_normal_switch);
+            gMain.state = 0;
+            SetMainCallback(pkmn_player_normal_switch);
             return;
         case ForcedSwitch:
-            super.multi_purpose_state_tracker = 2;
-            set_callback1(pkmn_player_normal_switch);
+            gMain.state = 2;
+            SetMainCallback(pkmn_player_normal_switch);
             break;
         case PokemonFainted:
-            super.multi_purpose_state_tracker = 2;
-            set_callback1(pkmn_player_normal_switch);
+            gMain.state = 2;
+            SetMainCallback(pkmn_player_normal_switch);
             return;
     };
 }
