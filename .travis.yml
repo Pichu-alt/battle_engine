@@ -18,7 +18,6 @@ before_install:
 
 
 install:
-    - sudo perl devkitARMupdate.pl
     - (cd deps/g3headers && make)
     - (cd deps/armips && cmake . && make -j 8)
     - (cd deps/pokeruby && ./build_tools.sh)
